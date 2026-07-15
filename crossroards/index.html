@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Crosswords — Fill In</title>
+<link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjoiQ3Jvc3N3b3JkcyIsInNob3J0X25hbWUiOiJDcm9zc3dvcmRzIiwic3RhcnRfdXJsIjoiLiIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiNGMUVCREQiLCJ0aGVtZV9jb2xvciI6IiNCMjNBM0EiLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sO2Jhc2U2NCxQSE4yWnlCNGJXeHVjejBuYUhSMGNEb3ZMM2QzZHk1M015NXZjbWN2TWpBd01DOXpkbWNuSUhacFpYZENiM2c5SnpBZ01DQXhNREFnTVRBd0p6NDhjbVZqZENCM2FXUjBhRDBuTVRBd0p5Qm9aV2xuYUhROUp6RXdNQ2NnY25nOUp6RTRKeUJtYVd4c1BTY2pRakl6UVROQkp5OCtQR2NnWm1sc2JEMG5kMmhwZEdVblBqeHlaV04wSUhnOUp6RTRKeUI1UFNjeE9DY2dkMmxrZEdnOUp6RTRKeUJvWldsbmFIUTlKekU0Snk4K1BISmxZM1FnZUQwbk5ERW5JSGs5SnpFNEp5QjNhV1IwYUQwbk1UZ25JR2hsYVdkb2REMG5NVGduTHo0OGNtVmpkQ0I0UFNjMk5DY2dlVDBuTVRnbklIZHBaSFJvUFNjeE9DY2dhR1ZwWjJoMFBTY3hPQ2N2UGp4eVpXTjBJSGc5SnpFNEp5QjVQU2MwTVNjZ2QybGtkR2c5SnpFNEp5Qm9aV2xuYUhROUp6RTRKeTgrUEhKbFkzUWdlRDBuTmpRbklIazlKelF4SnlCM2FXUjBhRDBuTVRnbklHaGxhV2RvZEQwbk1UZ25MejQ4Y21WamRDQjRQU2N4T0NjZ2VUMG5OalFuSUhkcFpIUm9QU2N4T0NjZ2FHVnBaMmgwUFNjeE9DY3ZQanh5WldOMElIZzlKelF4SnlCNVBTYzJOQ2NnZDJsa2RHZzlKekU0SnlCb1pXbG5hSFE5SnpFNEp5OCtQSEpsWTNRZ2VEMG5OalFuSUhrOUp6WTBKeUIzYVdSMGFEMG5NVGduSUdobGFXZG9kRDBuTVRnbkx6NDhMMmMrUEM5emRtYysiLCJzaXplcyI6IjE5MngxOTIiLCJ0eXBlIjoiaW1hZ2Uvc3ZnK3htbCJ9LHsic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sO2Jhc2U2NCxQSE4yWnlCNGJXeHVjejBuYUhSMGNEb3ZMM2QzZHk1M015NXZjbWN2TWpBd01DOXpkbWNuSUhacFpYZENiM2c5SnpBZ01DQXhNREFnTVRBd0p6NDhjbVZqZENCM2FXUjBhRDBuTVRBd0p5Qm9aV2xuYUhROUp6RXdNQ2NnY25nOUp6RTRKeUJtYVd4c1BTY2pRakl6UVROQkp5OCtQR2NnWm1sc2JEMG5kMmhwZEdVblBqeHlaV04wSUhnOUp6RTRKeUI1UFNjeE9DY2dkMmxrZEdnOUp6RTRKeUJvWldsbmFIUTlKekU0Snk4K1BISmxZM1FnZUQwbk5ERW5JSGs5SnpFNEp5QjNhV1IwYUQwbk1UZ25JR2hsYVdkb2REMG5NVGduTHo0OGNtVmpkQ0I0UFNjMk5DY2dlVDBuTVRnbklIZHBaSFJvUFNjeE9DY2dhR1ZwWjJoMFBTY3hPQ2N2UGp4eVpXTjBJSGc5SnpFNEp5QjVQU2MwTVNjZ2QybGtkR2c5SnpFNEp5Qm9aV2xuYUhROUp6RTRKeTgrUEhKbFkzUWdlRDBuTmpRbklIazlKelF4SnlCM2FXUjBhRDBuTVRnbklHaGxhV2RvZEQwbk1UZ25MejQ4Y21WamRDQjRQU2N4T0NjZ2VUMG5OalFuSUhkcFpIUm9QU2N4T0NjZ2FHVnBaMmgwUFNjeE9DY3ZQanh5WldOMElIZzlKelF4SnlCNVBTYzJOQ2NnZDJsa2RHZzlKekU0SnlCb1pXbG5hSFE5SnpFNEp5OCtQSEpsWTNRZ2VEMG5OalFuSUhrOUp6WTBKeUIzYVdSMGFEMG5NVGduSUdobGFXZG9kRDBuTVRnbkx6NDhMMmMrUEM5emRtYysiLCJzaXplcyI6IjUxMng1MTIiLCJ0eXBlIjoiaW1hZ2Uvc3ZnK3htbCJ9XX0=">
+<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMDAgMTAwJz48cmVjdCB3aWR0aD0nMTAwJyBoZWlnaHQ9JzEwMCcgcng9JzE4JyBmaWxsPScjQjIzQTNBJy8+PGcgZmlsbD0nd2hpdGUnPjxyZWN0IHg9JzE4JyB5PScxOCcgd2lkdGg9JzE4JyBoZWlnaHQ9JzE4Jy8+PHJlY3QgeD0nNDEnIHk9JzE4JyB3aWR0aD0nMTgnIGhlaWdodD0nMTgnLz48cmVjdCB4PSc2NCcgeT0nMTgnIHdpZHRoPScxOCcgaGVpZ2h0PScxOCcvPjxyZWN0IHg9JzE4JyB5PSc0MScgd2lkdGg9JzE4JyBoZWlnaHQ9JzE4Jy8+PHJlY3QgeD0nNjQnIHk9JzQxJyB3aWR0aD0nMTgnIGhlaWdodD0nMTgnLz48cmVjdCB4PScxOCcgeT0nNjQnIHdpZHRoPScxOCcgaGVpZ2h0PScxOCcvPjxyZWN0IHg9JzQxJyB5PSc2NCcgd2lkdGg9JzE4JyBoZWlnaHQ9JzE4Jy8+PHJlY3QgeD0nNjQnIHk9JzY0JyB3aWR0aD0nMTgnIGhlaWdodD0nMTgnLz48L2c+PC9zdmc+">
+<meta name="theme-color" content="#B23A3A">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Crosswords">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+  :root{
+    --paper:#F1EBDD; --paper-raised:#FAF6EC; --ink:#232220; --ink-soft:#5B564C;
+    --rule:#CFC5AC; --red:#B23A3A; --red-deep:#8E2C2C; --gold:#F0CD73; --gold-soft:#F8E6B0;
+    --green:#4C7A57;
+    --blue:#3E6FA6; --blue-bg:#E7EFF7;
+    --purple:#7A5AA8; --purple-bg:#F1EAF7;
+    --leaf:#3F8F5F; --leaf-bg:#E6F4EB;
+    --amber:#B8802B; --amber-bg:#FBF0DC;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;height:100%;overflow:hidden;}
+  body{background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,'Segoe UI',sans-serif;-webkit-tap-highlight-color:transparent;}
+  #app{max-width:560px;margin:0 auto;height:100vh;display:flex;flex-direction:column;overflow:hidden;}
+  header{display:flex;align-items:center;gap:8px;padding:14px 16px;border-bottom:1px solid var(--rule);flex-shrink:0;flex-wrap:wrap;}
+  header h1{font-size:18px;margin:0;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:80px;}
+  .icon-btn{background:none;border:1px solid var(--rule);color:var(--ink-soft);border-radius:8px;flex-shrink:0;font-size:12.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;padding:7px 10px;white-space:nowrap;}
+  .c-blue{border-color:var(--blue)!important;color:var(--blue)!important;background:var(--blue-bg)!important;}
+  .c-purple{border-color:var(--purple)!important;color:var(--purple)!important;background:var(--purple-bg)!important;}
+  .c-leaf{border-color:var(--leaf)!important;color:var(--leaf)!important;background:var(--leaf-bg)!important;}
+  .c-amber{border-color:var(--amber)!important;color:var(--amber)!important;background:var(--amber-bg)!important;}
+  .back-btn{background:none;border:none;font-size:20px;cursor:pointer;padding:2px 6px;color:var(--ink);}
+  .warn{background:#FBE6C8;color:#7A5210;font-size:12px;padding:8px 16px;border-bottom:1px solid var(--rule);flex-shrink:0;}
+  main{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 16px;display:flex;flex-direction:column;gap:14px;}
+  button.primary{background:var(--red);color:#fff;border:none;border-radius:8px;padding:11px 16px;font-size:14px;font-weight:600;cursor:pointer;flex-shrink:0;}
+  button.secondary{background:none;border:1px solid var(--rule);color:var(--ink-soft);border-radius:8px;padding:9px 14px;font-size:13px;cursor:pointer;}
+  input[type=text],input[type=number]{border:1px solid var(--rule);border-radius:6px;padding:8px 10px;font-size:14px;background:#fff;color:var(--ink);width:100%;}
+  label.field{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--ink-soft);}
+
+  /* home list */
+  .card{background:var(--paper-raised);border:1px solid var(--rule);border-radius:10px;padding:10px;display:flex;gap:12px;align-items:center;cursor:pointer;box-shadow:0 2px 8px rgba(35,34,32,.08);}
+  .card img{width:56px;height:56px;object-fit:cover;border-radius:6px;border:1px solid var(--rule);}
+  .card .meta{flex:1;min-width:0;}
+  .card .lbl{font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .card .sub{font-size:12px;color:var(--ink-soft);}
+  .card .pct{font-size:12px;font-weight:700;color:var(--red-deep);flex-shrink:0;}
+  .empty{text-align:center;color:var(--ink-soft);font-size:13px;padding:40px 20px;}
+
+  /* calibrate */
+  .img-wrap{position:relative;width:100%;line-height:0;border:1px solid var(--rule);border-radius:6px;overflow:hidden;}
+  .img-wrap img{width:100%;display:block;}
+  .bbox{position:absolute;border:2px solid var(--red);background:rgba(178,58,58,0.08);pointer-events:none;}
+  .cell-ov{position:absolute;border:1px solid rgba(35,34,32,0.35);}
+  .cell-ov.black{background:rgba(35,34,32,0.72);}
+  .cell-ov.white{background:rgba(255,255,255,0.05);cursor:pointer;}
+  .cell-ov.editable{cursor:pointer;}
+  .sliders{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .sliders label{display:flex;flex-direction:column;gap:2px;font-size:11px;color:var(--ink-soft);}
+  .row2{display:flex;gap:10px;}
+  .row2 > *{flex:1;}
+  .hint{font-size:11.5px;color:var(--ink-soft);line-height:1.5;}
+
+  /* fill */
+  .fill-wrap{position:relative;width:100%;line-height:0;border:1px solid var(--rule);border-radius:6px;overflow:hidden;}
+  .fill-wrap img{width:100%;display:block;}
+  .fcell{position:absolute;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+  .fcell .letter{background:rgba(250,246,236,0.88);color:var(--red-deep);font-weight:800;border-radius:2px;width:82%;height:82%;display:flex;align-items:center;justify-content:center;font-size:inherit;}
+  .fcell.selected{outline:2px solid var(--red-deep);outline-offset:-1px;background:rgba(240,205,115,0.35);z-index:2;}
+  .dir-toggle{position:sticky;bottom:0;display:flex;gap:8px;justify-content:center;padding:8px;background:var(--paper);border-top:1px solid var(--rule);}
+  .dir-toggle button{background:var(--paper-raised);border:1px solid var(--rule);border-radius:20px;padding:6px 16px;font-size:13px;cursor:pointer;}
+  .dir-toggle button.active{background:var(--red);color:#fff;border-color:var(--red);}
+  .hidden-input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none;}
+  .fill-toolbar{display:flex;flex-wrap:wrap;gap:8px;}
+  .fill-toolbar button{flex:1;min-width:100px;}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<input type="file" id="fileInput" accept="image/*,application/pdf" multiple style="display:none">
+<input type="file" id="jsonInput" accept=".json,application/json" style="display:none">
+
+<script>
+/* =========================================================
+   PERSISTENCE — plain localStorage.
+   NOTE: this only works when this HTML file is opened
+   directly in a real browser (double-click, or hosted
+   somewhere). It will NOT save inside the Claude.ai
+   in-chat preview — save this file to your device first.
+   ========================================================= */
+const LS_KEY = 'crossword_puzzles_v1';
+function loadPuzzles(){
+  try{ return JSON.parse(localStorage.getItem(LS_KEY) || '[]'); }
+  catch(e){ return []; }
+}
+function savePuzzles(list){
+  try{ localStorage.setItem(LS_KEY, JSON.stringify(list)); return true; }
+  catch(e){ console.error('save failed', e); return false; }
+}
+let storageWorks = true;
+try{
+  localStorage.setItem('__t','1'); localStorage.removeItem('__t');
+}catch(e){ storageWorks = false; }
+
+let puzzles = loadPuzzles();
+
+/* Templates — saved calibration presets per source (e.g. "Yedioth Ahronoth
+   - Dekel Benu" vs "Haaretz - Yoram HaRoeh"), since different papers/columns lay
+   the grid out differently. */
+const TPL_KEY = 'crossword_templates_v1';
+function loadTemplates(){
+  try{ return JSON.parse(localStorage.getItem(TPL_KEY) || '[]'); }
+  catch(e){ return []; }
+}
+function saveTemplates(list){
+  try{ localStorage.setItem(TPL_KEY, JSON.stringify(list)); return true; }
+  catch(e){ return false; }
+}
+let lastUsedSettings = null; // {bbox, rows, cols} of most recently saved puzzle, reused as default for the next upload
+
+/* =========================================================
+   CROSSWORD ENGINE — derive across/down runs from a plain
+   boolean grid (true = black). Pure code, no AI involved.
+   ========================================================= */
+function buildRuns(black, rows, cols){
+  const isBlack = (r,c)=> r<0||c<0||r>=rows||c>=cols||black[r][c];
+  const clues = {across:[], down:[]};
+  const cellMembership = {};
+  let num = 1;
+  for(let r=0;r<rows;r++){
+    for(let c=0;c<cols;c++){
+      if(isBlack(r,c)) continue;
+      const startsAcross = isBlack(r,c-1) && !isBlack(r,c+1);
+      const startsDown = isBlack(r-1,c) && !isBlack(r+1,c);
+      if(!startsAcross && !startsDown) continue;
+      let used=false, acr=null, dwn=null;
+      if(startsAcross){
+        let len=0; while(!isBlack(r,c+len)) len++;
+        acr={number:num,dir:'across',row:r,col:c,length:len,cells:Array.from({length:len},(_,i)=>`${r}-${c+i}`)};
+        clues.across.push(acr); used=true;
+      }
+      if(startsDown){
+        let len=0; while(!isBlack(r+len,c)) len++;
+        dwn={number:num,dir:'down',row:r,col:c,length:len,cells:Array.from({length:len},(_,i)=>`${r+i}-${c}`)};
+        clues.down.push(dwn); used=true;
+      }
+      if(used) num++;
+    }
+  }
+  [...clues.across, ...clues.down].forEach(cl=>{
+    cl.cells.forEach(k=>{
+      cellMembership[k] = cellMembership[k] || {across:null,down:null};
+      cellMembership[k][cl.dir] = cl;
+    });
+  });
+  const order = [...clues.across, ...clues.down];
+  let totalOpen = 0;
+  for(let r=0;r<rows;r++) for(let c=0;c<cols;c++) if(!black[r][c]) totalOpen++;
+  return {clues, cellMembership, order, totalOpen};
+}
+
+/* =========================================================
+   IMAGE HELPERS
+   ========================================================= */
+function downscale(dataUrl, maxDim){
+  return new Promise((resolve)=>{
+    const img = new Image();
+    img.onload = ()=>{
+      let w = img.naturalWidth, h = img.naturalHeight;
+      if(Math.max(w,h) > maxDim){
+        const s = maxDim / Math.max(w,h);
+        w = Math.round(w*s); h = Math.round(h*s);
+      }
+      const cv = document.createElement('canvas'); cv.width=w; cv.height=h;
+      cv.getContext('2d').drawImage(img,0,0,w,h);
+      resolve({dataUrl: cv.toDataURL('image/jpeg',0.78), w, h});
+    };
+    img.src = dataUrl;
+  });
+}
+function loadImageEl(dataUrl){
+  return new Promise((resolve)=>{
+    const img = new Image();
+    img.onload = ()=> resolve(img);
+    img.src = dataUrl;
+  });
+}
+async function pdfFirstPageToDataUrl(file){
+  const buf = await file.arrayBuffer();
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  const pdf = await pdfjsLib.getDocument({data:buf}).promise;
+  const page = await pdf.getPage(1);
+  const viewport = page.getViewport({scale:2.2});
+  const cv = document.createElement('canvas');
+  cv.width = viewport.width; cv.height = viewport.height;
+  await page.render({canvasContext:cv.getContext('2d'), viewport}).promise;
+  return cv.toDataURL('image/jpeg',0.85);
+}
+
+
+/* =========================================================
+   STATE + RENDER
+   ========================================================= */
+let view = {screen:'home'};
+let cal = null; // calibration working state
+let fillState = null; // {puzzleId, selected:{r,c}, dir}
+let saveTimer = null;
+let editMode = false; // gates access to Realign Grid so it can't be bumped into while playing
+
+function el(tag,cls,html){ const e=document.createElement(tag); if(cls) e.className=cls; if(html!==undefined) e.innerHTML=html; return e; }
+
+function render(){
+  const root = document.getElementById('app');
+  root.innerHTML='';
+  if(view.screen==='home') root.appendChild(renderHome());
+  else if(view.screen==='calibrate') root.appendChild(renderCalibrate());
+  else if(view.screen==='fill') root.appendChild(renderFill());
+}
+
+/* ---------- HOME ---------- */
+function renderHome(){
+  const frag = document.createDocumentFragment();
+  const h = el('header');
+  h.appendChild(el('h1','','My Crosswords'));
+
+  const mkIconBtn = (icon, label, title, onClick, colorClass)=>{
+    const b = el('button','icon-btn'+(colorClass?' '+colorClass:''), icon+' '+label);
+    b.title = title;
+    b.setAttribute('aria-label', title);
+    b.addEventListener('click', onClick);
+    return b;
+  };
+
+  h.appendChild(mkIconBtn('⇱', 'Group', 'Get more from the Google Group — opens in a new tab. Click the download icon next to the file, not the filename.',
+    ()=> window.open('https://groups.google.com/g/tartey_mashma', '_blank'), 'c-blue'));
+
+  if(puzzles.length>0){
+    h.appendChild(mkIconBtn('📦', 'Share', 'Export a shareable copy — one HTML file with all puzzles and calibrations already inside (no answers). Whoever opens it needs nothing else.', exportPackagedApp, 'c-purple'));
+    h.appendChild(mkIconBtn('⬇', 'Backup', 'Export data backup (.json) — just the data, no app code. Import it into any working copy to add these puzzles.', exportJsonBackup, 'c-leaf'));
+  }
+
+  h.appendChild(mkIconBtn('⬆', 'Import', 'Import backup (.json)', ()=> document.getElementById('jsonInput').click(), 'c-amber'));
+
+  const addBtn = el('button','primary','+ Add Crossword');
+  addBtn.addEventListener('click', ()=> document.getElementById('fileInput').click());
+  h.appendChild(addBtn);
+  frag.appendChild(h);
+
+  if(!storageWorks){
+    frag.appendChild(el('div','warn','Local saving isn\'t available in this browser right now — opening this as a local file (not Claude\'s in-chat preview) will fix that.'));
+  }
+
+  const main = el('main');
+  if(puzzles.length===0){
+    main.appendChild(el('div','empty','No crosswords yet. Tap "Add Crossword" and upload an image or PDF.'));
+  }else{
+    [...puzzles].sort((a,b)=>b.updatedAt-a.updatedAt).forEach(p=>{
+      const runs = buildRuns(p.black, p.rows, p.cols);
+      const filled = Object.values(p.answers||{}).filter(Boolean).length;
+      const pct = runs.totalOpen ? Math.round(100*filled/runs.totalOpen) : 0;
+      const card = el('div','card');
+      const img = document.createElement('img'); img.src = p.imageData;
+      card.appendChild(img);
+      const meta = el('div','meta');
+      meta.appendChild(el('div','lbl', p.label));
+      meta.appendChild(el('div','sub', `${p.rows}×${p.cols} · ${filled}/${runs.totalOpen} cells`));
+      card.appendChild(meta);
+      card.appendChild(el('div','pct', pct===100?'✓':pct+'%'));
+      card.addEventListener('click', ()=>{
+        fillState = {puzzleId:p.id, selected:null, dir:'across'};
+        view = {screen:'fill'};
+        render();
+      });
+      main.appendChild(card);
+    });
+  }
+  frag.appendChild(main);
+  return frag;
+}
+
+let uploadQueue = [];
+
+document.getElementById('fileInput').addEventListener('change', async (e)=>{
+  const files = Array.from(e.target.files);
+  e.target.value='';
+  if(!files.length) return;
+
+  const known = new Set(puzzles.map(p=>p.sourceFileName).filter(Boolean));
+  const validType = f => f.type.startsWith('image/') || f.type === 'application/pdf';
+  const bad = files.filter(f=>!validType(f));
+  const candidates = files.filter(validType);
+  if(bad.length){
+    alert('Ignored '+bad.length+' file(s) that aren\'t an image/PDF (e.g. an HTML page downloaded by mistake instead of the image — try downloading again, and click the download icon rather than the filename).');
+  }
+  const fresh = candidates.filter(f=> !known.has(f.name));
+  const skipped = candidates.length - fresh.length;
+
+  if(!candidates.length) return; // nothing valid to add; already alerted above
+
+  if(!fresh.length){
+    alert('All '+candidates.length+' file(s) already exist in the app — nothing added.');
+    return;
+  }
+  if(skipped>0){
+    alert(`${fresh.length} new file(s) will be added. ${skipped} already exist (by filename) and were skipped.`);
+  }
+
+  uploadQueue = fresh.slice(1);
+  await startCalibration(fresh[0], lastUsedSettings);
+});
+
+async function startCalibration(file, carryOver){
+  let dataUrl;
+  if(file.type === 'application/pdf'){
+    try{ dataUrl = await pdfFirstPageToDataUrl(file); }
+    catch(err){
+      alert('Couldn\'t open the PDF file: '+err.message);
+      return advanceQueueOrHome();
+    }
+  }else{
+    dataUrl = await new Promise(res=>{ const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.readAsDataURL(file); });
+  }
+  const {dataUrl: small} = await downscale(dataUrl, 1100);
+  const imgEl = await loadImageEl(small);
+  const base = carryOver || {bbox:{x:5,y:5,w:90,h:90}, rows:6, cols:6};
+  const defaultLabel = file.name.replace(/\.[^/.]+$/, '');
+  cal = {
+    imageData: small, imgEl,
+    bbox: {...base.bbox},
+    rows: base.rows, cols: base.cols,
+    label: defaultLabel,
+    sourceFileName: file.name
+  };
+  view = {screen:'calibrate'};
+  render();
+}
+
+function advanceQueueOrHome(){
+  const next = uploadQueue.shift();
+  cal = null;
+  if(next){ startCalibration(next, lastUsedSettings); }
+  else{ view = {screen:'home'}; render(); }
+}
+
+async function startRealign(p){
+  const imgEl = await loadImageEl(p.imageData);
+  cal = {
+    imageData: p.imageData, imgEl,
+    bbox: {...p.bbox},
+    rows: p.rows, cols: p.cols,
+    label: p.label,
+    sourceFileName: p.sourceFileName,
+    editingPuzzleId: p.id
+  };
+  view = {screen:'calibrate'};
+  render();
+}
+
+/* ---------- CALIBRATE ---------- */
+function renderCalibrate(){
+  const frag = document.createDocumentFragment();
+  const h = el('header');
+  const back = el('button','back-btn','←');
+  back.addEventListener('click', ()=>{
+    const editingId = cal.editingPuzzleId;
+    cal=null;
+    if(editingId){ fillState = {puzzleId:editingId, selected:null, dir:'across'}; view={screen:'fill'}; }
+    else{ view={screen:'home'}; }
+    render();
+  });
+  h.appendChild(back);
+  const queueNote = uploadQueue.length ? ` (${uploadQueue.length+1} left in queue)` : '';
+  h.appendChild(el('h1','','Align Grid'+queueNote));
+  frag.appendChild(h);
+
+  const main = el('main');
+  main.appendChild(el('div','hint','Set rows/columns, drag on the image to align the grid, and nudge with the arrows if needed. Every cell — including black ones — will be fillable.'));
+
+  const templates = loadTemplates();
+  if(templates.length){
+    const tplField = el('label','field'); tplField.appendChild(document.createTextNode('Apply an existing template (for this source)'));
+    const tSelect = document.createElement('select');
+    tSelect.style.cssText = 'border:1px solid var(--rule);border-radius:6px;padding:8px;font-size:14px;width:100%;background:#fff;';
+    const optDefault = document.createElement('option'); optDefault.value=''; optDefault.textContent='— Select a template —';
+    tSelect.appendChild(optDefault);
+    templates.forEach(t=>{
+      const o=document.createElement('option'); o.value=t.id; o.textContent=t.name; tSelect.appendChild(o);
+    });
+    tSelect.addEventListener('change',(e)=>{
+      const t = templates.find(x=>x.id===e.target.value);
+      if(t){ cal.bbox = {...t.bbox}; cal.rows=t.rows; cal.cols=t.cols; render(); }
+    });
+    tplField.appendChild(tSelect);
+    main.appendChild(tplField);
+  }
+
+  const row2 = el('div','row2');
+  const rowsField = el('label','field'); rowsField.appendChild(document.createTextNode('Rows'));
+  const rowsInp = document.createElement('input'); rowsInp.type='number'; rowsInp.min=1; rowsInp.max=25; rowsInp.value=cal.rows;
+  rowsInp.addEventListener('change',(e)=>{
+    cal.rows = Math.max(1, Math.min(25, Number(e.target.value)||1));
+    render();
+  });
+  rowsField.appendChild(rowsInp);
+  const colsField = el('label','field'); colsField.appendChild(document.createTextNode('Columns'));
+  const colsInp = document.createElement('input'); colsInp.type='number'; colsInp.min=1; colsInp.max=25; colsInp.value=cal.cols;
+  colsInp.addEventListener('change',(e)=>{
+    cal.cols = Math.max(1, Math.min(25, Number(e.target.value)||1));
+    render();
+  });
+  colsField.appendChild(colsInp);
+  row2.appendChild(rowsField); row2.appendChild(colsField);
+  main.appendChild(row2);
+
+  const wrap = el('div','img-wrap');
+  if(cal.imgEl && cal.imgEl.naturalWidth && cal.imgEl.naturalHeight){
+    const aspect = cal.imgEl.naturalWidth / cal.imgEl.naturalHeight;
+    const maxHeightPx = Math.min(window.innerHeight * 0.5, 480);
+    const capWidthPx = Math.round(maxHeightPx * aspect);
+    wrap.style.maxWidth = capWidthPx + 'px';
+    wrap.style.margin = '0 auto';
+  }
+  const img = document.createElement('img'); img.src = cal.imageData;
+  wrap.appendChild(img);
+  const bboxEl = el('div','bbox');
+  const applyBboxStyle = (bx)=>{
+    bboxEl.style.left = bx.x+'%'; bboxEl.style.top = bx.y+'%';
+    bboxEl.style.width = bx.w+'%'; bboxEl.style.height = bx.h+'%';
+  };
+  applyBboxStyle(cal.bbox);
+  wrap.appendChild(bboxEl);
+
+  // grid-line preview (purely visual, so you can see it lining up with the real cells)
+  const gridLines = el('div','grid-lines');
+  gridLines.style.cssText = 'position:absolute;pointer-events:none;left:'+cal.bbox.x+'%;top:'+cal.bbox.y+'%;width:'+cal.bbox.w+'%;height:'+cal.bbox.h+'%;'
+    +'background-image:'
+    +'repeating-linear-gradient(to left, rgba(178,58,58,0.55) 0, rgba(178,58,58,0.55) 1px, transparent 1px, transparent calc(100%/'+cal.cols+')),'
+    +'repeating-linear-gradient(to top, rgba(178,58,58,0.55) 0, rgba(178,58,58,0.55) 1px, transparent 1px, transparent calc(100%/'+cal.rows+'));';
+  wrap.appendChild(gridLines);
+
+  const dragLayer = el('div','drag-layer');
+  dragLayer.style.cssText = 'position:absolute;inset:0;touch-action:none;cursor:crosshair;';
+  wrap.appendChild(dragLayer);
+  let startPct = null;
+  const getPct = (evt)=>{
+    const rect = wrap.getBoundingClientRect();
+    const x = Math.min(100, Math.max(0, (evt.clientX-rect.left)/rect.width*100));
+    const y = Math.min(100, Math.max(0, (evt.clientY-rect.top)/rect.height*100));
+    return {x,y};
+  };
+  dragLayer.addEventListener('pointerdown',(e)=>{
+    e.preventDefault();
+    dragLayer.setPointerCapture(e.pointerId);
+    startPct = getPct(e);
+    applyBboxStyle({x:startPct.x,y:startPct.y,w:0,h:0});
+    gridLines.style.opacity='0';
+  });
+  dragLayer.addEventListener('pointermove',(e)=>{
+    if(!startPct) return;
+    const cur = getPct(e);
+    applyBboxStyle({
+      x:Math.min(startPct.x,cur.x), y:Math.min(startPct.y,cur.y),
+      w:Math.abs(cur.x-startPct.x), h:Math.abs(cur.y-startPct.y)
+    });
+  });
+  dragLayer.addEventListener('pointerup',(e)=>{
+    if(!startPct) return;
+    const cur = getPct(e);
+    const x=Math.min(startPct.x,cur.x), y=Math.min(startPct.y,cur.y);
+    const w=Math.abs(cur.x-startPct.x), h=Math.abs(cur.y-startPct.y);
+    startPct = null;
+    if(w>=3 && h>=3){ cal.bbox = {x,y,w,h}; }
+    render();
+  });
+  dragLayer.addEventListener('pointercancel', ()=>{ startPct=null; });
+  main.appendChild(wrap);
+
+  const nudge = el('div','');
+  nudge.style.cssText = 'display:grid;grid-template-columns:repeat(4,1fr);gap:6px;';
+  const step = 0.4;
+  const mkNudge = (txt, fn)=>{
+    const b = el('button','secondary', txt);
+    b.style.fontSize='14px';
+    b.addEventListener('click', ()=>{ fn(); render(); });
+    return b;
+  };
+  nudge.appendChild(mkNudge('Right →', ()=>{ cal.bbox.x = Math.min(99,cal.bbox.x+step); }));
+  nudge.appendChild(mkNudge('← Left', ()=>{ cal.bbox.x = Math.max(0,cal.bbox.x-step); }));
+  nudge.appendChild(mkNudge('Down ↓', ()=>{ cal.bbox.y = Math.min(99,cal.bbox.y+step); }));
+  nudge.appendChild(mkNudge('↑ Up', ()=>{ cal.bbox.y = Math.max(0,cal.bbox.y-step); }));
+  nudge.appendChild(mkNudge('↔ Wider', ()=>{ cal.bbox.w = Math.min(100-cal.bbox.x, cal.bbox.w+step); }));
+  nudge.appendChild(mkNudge('↔ Narrower', ()=>{ cal.bbox.w = Math.max(5, cal.bbox.w-step); }));
+  nudge.appendChild(mkNudge('↕ Taller', ()=>{ cal.bbox.h = Math.min(100-cal.bbox.y, cal.bbox.h+step); }));
+  nudge.appendChild(mkNudge('↕ Shorter', ()=>{ cal.bbox.h = Math.max(5, cal.bbox.h-step); }));
+  main.appendChild(nudge);
+
+  const saveTplBtn = el('button','secondary','Save this position/size as a template for this source');
+  saveTplBtn.addEventListener('click', ()=>{
+    const name = prompt('Template name (e.g. Yedioth Ahronoth - Dekel Benu):', cal.label||'');
+    if(!name) return;
+    const list = loadTemplates();
+    list.push({id:'t_'+Date.now(), name, bbox:{...cal.bbox}, rows:cal.rows, cols:cal.cols});
+    saveTemplates(list);
+    alert('Template "'+name+'" saved. Next time you upload a puzzle from the same source, pick it from the list above.');
+  });
+  main.appendChild(saveTplBtn);
+
+  const labelField = el('label','field'); labelField.appendChild(document.createTextNode('Puzzle name/date'));
+  const labelInp = document.createElement('input'); labelInp.type='text'; labelInp.value=cal.label;
+  labelInp.placeholder = 'e.g. 15.7.2026';
+  labelInp.addEventListener('input',(e)=> cal.label = e.target.value);
+  labelField.appendChild(labelInp);
+  main.appendChild(labelField);
+
+  const saveBtn = el('button','primary',
+    cal.editingPuzzleId ? 'Save alignment' : (uploadQueue.length ? 'Save & continue to next' : 'Save & start filling'));
+  saveBtn.addEventListener('click', ()=>{
+    const label = cal.label.trim() || ('Puzzle '+ (puzzles.length+1));
+
+    if(cal.editingPuzzleId){
+      const existing = puzzles.find(x=>x.id===cal.editingPuzzleId);
+      if(!existing){ cal=null; view={screen:'home'}; render(); return; }
+      const dimsChanged = existing.rows!==cal.rows || existing.cols!==cal.cols;
+      if(dimsChanged && Object.values(existing.answers||{}).some(Boolean)){
+        if(!confirm('Changing rows/columns shifts cell positions, so your existing answers for this puzzle will be cleared. Continue?')) return;
+        existing.answers = {};
+      }
+      existing.label = label;
+      existing.bbox = cal.bbox;
+      existing.rows = cal.rows; existing.cols = cal.cols;
+      if(dimsChanged) existing.black = Array.from({length:cal.rows},()=>Array(cal.cols).fill(false));
+      existing.updatedAt = Date.now();
+      savePuzzles(puzzles);
+      lastUsedSettings = {bbox:{...cal.bbox}, rows:cal.rows, cols:cal.cols};
+      cal = null;
+      fillState = {puzzleId:existing.id, selected:null, dir:'across'};
+      view = {screen:'fill'};
+      render();
+      return;
+    }
+
+    const p = {
+      id: 'p_'+Date.now(),
+      label,
+      sourceFileName: cal.sourceFileName || null,
+      imageData: cal.imageData,
+      bbox: cal.bbox,
+      rows: cal.rows, cols: cal.cols,
+      black: Array.from({length:cal.rows},()=>Array(cal.cols).fill(false)), // every cell fillable
+      answers: {},
+      updatedAt: Date.now()
+    };
+    puzzles.push(p);
+    savePuzzles(puzzles);
+    lastUsedSettings = {bbox:{...cal.bbox}, rows:cal.rows, cols:cal.cols};
+    const nextFile = uploadQueue.shift();
+    cal = null;
+    if(nextFile){
+      startCalibration(nextFile, lastUsedSettings);
+    }else{
+      fillState = {puzzleId:p.id, selected:null, dir:'across'};
+      view = {screen:'fill'};
+      render();
+    }
+  });
+  main.appendChild(saveBtn);
+
+  if(uploadQueue.length){
+    const skipBtn = el('button','secondary','Skip this one (don\'t save)');
+    skipBtn.addEventListener('click', advanceQueueOrHome);
+    main.appendChild(skipBtn);
+  }
+
+  frag.appendChild(main);
+  return frag;
+}
+
+/* ---------- FILL ---------- */
+function getPuzzle(id){ return puzzles.find(p=>p.id===id); }
+
+function renderFill(){
+  const p = getPuzzle(fillState.puzzleId);
+  const runs = buildRuns(p.black, p.rows, p.cols);
+  const frag = document.createDocumentFragment();
+
+  const h = el('header');
+  const back = el('button','back-btn','←');
+  back.addEventListener('click', ()=>{ view={screen:'home'}; render(); });
+  h.appendChild(back);
+  h.appendChild(el('h1','', p.label));
+  const renameBtn = el('button','secondary','Rename');
+  renameBtn.addEventListener('click', ()=>{
+    const newName = prompt('New name for this puzzle:', p.label);
+    if(newName && newName.trim()){
+      p.label = newName.trim();
+      p.updatedAt = Date.now();
+      savePuzzles(puzzles);
+      render();
+    }
+  });
+  h.appendChild(renameBtn);
+  const editToggle = el('button','secondary'+(editMode?' c-blue':''), editMode ? '✓ Editing' : '✎ Edit grid');
+  editToggle.title = 'Toggle edit mode to show/hide the Realign Grid control, so it can\'t be bumped by accident while playing.';
+  editToggle.addEventListener('click', ()=>{ editMode = !editMode; render(); });
+  h.appendChild(editToggle);
+  const delBtn = el('button','secondary','Delete');
+  delBtn.addEventListener('click', ()=>{
+    if(confirm('Delete this puzzle?')){
+      puzzles = puzzles.filter(x=>x.id!==p.id);
+      savePuzzles(puzzles);
+      view={screen:'home'}; render();
+    }
+  });
+  h.appendChild(delBtn);
+  frag.appendChild(h);
+
+  const main = el('main');
+
+  let sel = fillState.selected;
+  let dir = fillState.dir;
+  if(!sel){
+    const first = runs.order[0];
+    if(first) sel = {r:first.row, c:first.col};
+  }
+  const key = sel ? `${sel.r}-${sel.c}` : null;
+  const membership = key ? runs.cellMembership[key] : null;
+  let activeClue = membership ? (membership[dir] || membership.across || membership.down) : null;
+  if(activeClue) dir = activeClue.dir;
+
+  const wrap = el('div','fill-wrap');
+  const img = document.createElement('img'); img.src = p.imageData;
+  wrap.appendChild(img);
+
+  const bbox = p.bbox || {x:0,y:0,w:100,h:100};
+  const bcw = bbox.w/p.cols, bch = bbox.h/p.rows;
+
+  for(let r=0;r<p.rows;r++){
+    for(let c=0;c<p.cols;c++){
+      if(p.black[r][c]) continue;
+      const k = `${r}-${c}`;
+      const cell = el('div','fcell'+(sel && sel.r===r && sel.c===c ? ' selected':''));
+      cell.style.left=(bbox.x + c*bcw)+'%';
+      cell.style.top=(bbox.y + r*bch)+'%';
+      cell.style.width=bcw+'%'; cell.style.height=bch+'%';
+      cell.style.fontSize = 'min(4vw, 20px)';
+      const letter = p.answers[k];
+      if(letter){
+        const sp = el('span','letter', letter);
+        cell.appendChild(sp);
+      }
+      cell.addEventListener('click', ()=> onCellClick(p, runs, r, c));
+      wrap.appendChild(cell);
+    }
+  }
+  main.appendChild(wrap);
+
+  const hidden = el('input','hidden-input');
+  hidden.id='hiddenInput';
+  hidden.setAttribute('autocomplete','off');
+  hidden.addEventListener('input',(e)=> onType(p, runs, e));
+  hidden.addEventListener('keydown',(e)=> onKeydown(p, runs, e));
+  main.appendChild(hidden);
+
+  const toolbar = el('div','fill-toolbar');
+  if(editMode){
+    const realignBtn = el('button','secondary c-blue','Realign Grid');
+    realignBtn.addEventListener('click', ()=> startRealign(p));
+    toolbar.appendChild(realignBtn);
+  }
+  const clearBtn = el('button','secondary','Clear answers');
+  clearBtn.addEventListener('click', ()=>{
+    if(confirm('Clear all answers?')){ p.answers={}; savePuzzles(puzzles); render(); }
+  });
+  toolbar.appendChild(clearBtn);
+  const saveBtn = el('button','primary','Save');
+  saveBtn.addEventListener('click', ()=>{
+    clearTimeout(saveTimer);
+    savePuzzles(puzzles);
+    saveBtn.textContent = 'Saved ✓';
+    setTimeout(()=>{ saveBtn.textContent = 'Save'; }, 1200);
+  });
+  toolbar.appendChild(saveBtn);
+  main.appendChild(toolbar);
+  frag.appendChild(main);
+
+  setTimeout(()=>{
+    const hi = document.getElementById('hiddenInput');
+    if(hi) hi.focus({preventScroll:true});
+  },0);
+
+  fillState.selected = sel;
+  fillState.dir = dir;
+
+  return frag;
+}
+
+function onCellClick(p, runs, r, c){
+  const k = `${r}-${c}`;
+  const m = runs.cellMembership[k];
+  if(!m) return;
+  const prev = fillState.selected;
+  if(prev && prev.r===r && prev.c===c && m.across && m.down){
+    fillState.dir = fillState.dir==='across' ? 'down' : 'across';
+  }else if(!m[fillState.dir]){
+    fillState.dir = m.across ? 'across' : 'down';
+  }
+  fillState.selected = {r,c};
+  render();
+}
+function currentClue(runs){
+  if(!fillState.selected) return null;
+  const m = runs.cellMembership[`${fillState.selected.r}-${fillState.selected.c}`];
+  return m ? (m[fillState.dir] || m.across || m.down) : null;
+}
+function moveNext(runs){
+  const cl = currentClue(runs);
+  if(!cl) return;
+  const idx = cl.cells.indexOf(`${fillState.selected.r}-${fillState.selected.c}`);
+  if(idx>-1 && idx<cl.cells.length-1){
+    const [r,c] = cl.cells[idx+1].split('-').map(Number);
+    fillState.selected={r,c};
+  }else{
+    const pos = runs.order.findIndex(x=>x.number===cl.number && x.dir===cl.dir);
+    const nxt = runs.order[(pos+1)%runs.order.length];
+    if(nxt){ fillState.selected={r:nxt.row,c:nxt.col}; fillState.dir=nxt.dir; }
+  }
+}
+function movePrev(runs){
+  const cl = currentClue(runs);
+  if(!cl) return;
+  const idx = cl.cells.indexOf(`${fillState.selected.r}-${fillState.selected.c}`);
+  if(idx>0){ const [r,c]=cl.cells[idx-1].split('-').map(Number); fillState.selected={r,c}; }
+}
+function scheduleSave(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(()=> savePuzzles(puzzles), 350);
+}
+function onType(p, runs, e){
+  const val = e.target.value; e.target.value='';
+  if(!val) return;
+  const ch = val.slice(-1);
+  if(!fillState.selected){
+    const f = runs.order[0]; if(f) fillState.selected={r:f.row,c:f.col};
+  }
+  const k = `${fillState.selected.r}-${fillState.selected.c}`;
+  p.answers[k] = ch;
+  p.updatedAt = Date.now();
+  scheduleSave();
+  render();
+}
+function onKeydown(p, runs, e){
+  if(e.key !== 'Backspace') return;
+  e.preventDefault();
+  if(!fillState.selected) return;
+  const k = `${fillState.selected.r}-${fillState.selected.c}`;
+  if(p.answers[k]){ delete p.answers[k]; }
+  else{ movePrev(runs); const k2=`${fillState.selected.r}-${fillState.selected.c}`; delete p.answers[k2]; }
+  p.updatedAt = Date.now();
+  scheduleSave();
+  render();
+}
+
+/* ---------- EXPORT A SHAREABLE, SELF-CONTAINED COPY ---------- */
+function exportPackagedApp(){
+  const cleanPuzzles = puzzles.map(p => ({...p, answers: {}}));
+  const data = { puzzles: cleanPuzzles, templates: loadTemplates() };
+  const seed = document.createElement('script');
+  seed.id = 'seed-data';
+  seed.type = 'application/json';
+  seed.textContent = JSON.stringify(data);
+  document.body.appendChild(seed);
+  const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+  document.body.removeChild(seed);
+  const sizeMB = (html.length / (1024*1024)).toFixed(1);
+  const blob = new Blob([html], {type:'text/html'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'crossword-fill-packed-'+new Date().toISOString().slice(0,10)+'.html';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url), 5000);
+  if(html.length > 4*1024*1024){
+    alert('Heads up: this file is about '+sizeMB+' MB. Some mobile browsers (especially iOS Safari) cap local storage well below that, and it can silently fail to load on the other end. If it shows up empty on another device, use "Export data backup (.json)" + "Import backup" instead — same data, more reliable.');
+  }
+}
+
+/* ---------- JSON BACKUP (more reliable than the self-contained HTML for
+   transferring between devices, since importing reads the file directly
+   rather than relying on the browser's local storage quota at page-load) ---------- */
+function exportJsonBackup(){
+  const cleanPuzzles = puzzles.map(p => ({...p, answers: {}}));
+  const data = { puzzles: cleanPuzzles, templates: loadTemplates(), exportedAt: Date.now() };
+  const blob = new Blob([JSON.stringify(data)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'crossword-fill-backup-'+new Date().toISOString().slice(0,10)+'.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url), 5000);
+}
+
+document.getElementById('jsonInput').addEventListener('change', async (e)=>{
+  const file = e.target.files[0];
+  e.target.value = '';
+  if(!file) return;
+  try{
+    const text = await file.text();
+    const data = JSON.parse(text);
+    if(!Array.isArray(data.puzzles)) throw new Error('This file doesn\'t look like a crossword backup.');
+    const existingIds = new Set(puzzles.map(p=>p.id));
+    const existingNames = new Set(puzzles.map(p=>p.sourceFileName).filter(Boolean));
+    let added = 0, skipped = 0;
+    data.puzzles.forEach(p=>{
+      const dup = existingIds.has(p.id) || (p.sourceFileName && existingNames.has(p.sourceFileName));
+      if(dup){ skipped++; return; }
+      puzzles.push(p); added++;
+    });
+    if(Array.isArray(data.templates) && data.templates.length){
+      const existingTpl = loadTemplates();
+      const existingTplNames = new Set(existingTpl.map(t=>t.name));
+      data.templates.forEach(t=>{ if(!existingTplNames.has(t.name)) existingTpl.push(t); });
+      saveTemplates(existingTpl);
+    }
+    const ok = savePuzzles(puzzles);
+    alert(`Imported ${added} puzzle(s)${skipped?`, skipped ${skipped} already present`:''}.` + (ok?'':' Warning: could not save to local storage (may not persist after reload).'));
+    render();
+  }catch(err){
+    alert('Could not read that backup file: '+err.message);
+  }
+});
+
+// First-run seeding: if this copy was exported with baked-in puzzles/templates
+// and whoever opened it has no data of their own yet, load the bundled set.
+(function seedIfEmpty(){
+  if(puzzles.length===0){
+    const seedEl = document.getElementById('seed-data');
+    if(seedEl){
+      try{
+        const data = JSON.parse(seedEl.textContent);
+        if(Array.isArray(data.puzzles) && data.puzzles.length){
+          puzzles = data.puzzles;
+          const ok = savePuzzles(puzzles);
+          if(!ok){
+            alert('Loaded '+puzzles.length+' bundled puzzle(s) for this session, but this browser could not save them to local storage (likely a storage limit). They may disappear if you reload — use "Export data backup (.json)" from a working copy and "Import backup" here instead for a more reliable transfer.');
+          }
+        }
+        if(Array.isArray(data.templates) && data.templates.length){
+          saveTemplates(data.templates);
+        }
+      }catch(e){
+        alert('This file has bundled puzzle data but it could not be read (it may have been corrupted in transfer): '+e.message);
+      }
+    }
+  }
+})();
+
+render();
+</script>
+</body>
+</html>
