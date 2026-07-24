@@ -242,7 +242,7 @@ function renderHome(){
     ()=> window.open('https://groups.google.com/g/tartey_mashma', '_blank'), 'c-blue'));
 
   if(puzzles.length>0){
-    h.appendChild(mkIconBtn('📦', 'Share', 'Export a shareable copy — one HTML file with all puzzles and calibrations already inside (no answers). Whoever opens it needs nothing else.', exportPackagedApp, 'c-purple'));
+    h.appendChild(mkIconBtn('📦', 'Share Copy', 'Downloads an HTML file with all your puzzles and calibrations baked in (no answers) — this is a file, not a link, because puzzle data lives only in this browser\'s storage and isn\'t on the live app. Send the file to someone and they can open it directly, no setup needed.', exportPackagedApp, 'c-purple'));
     h.appendChild(mkIconBtn('⬇', 'Backup', 'Export data backup (.json) — just the data, no app code. Import it into any working copy to add these puzzles.', exportJsonBackup, 'c-leaf'));
   }
 
