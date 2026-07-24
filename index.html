@@ -48,6 +48,9 @@
   .card .lbl{font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .card .sub{font-size:12px;color:var(--ink-soft);}
   .card .pct{font-size:12px;font-weight:700;color:var(--red-deep);flex-shrink:0;}
+  .card .pct.done{color:var(--leaf);font-size:14px;}
+  .card .pct.started{color:var(--blue);}
+  .card.done{border-color:var(--leaf);}
   .empty{text-align:center;color:var(--ink-soft);font-size:13px;padding:40px 20px;}
 
   /* calibrate */
@@ -73,9 +76,10 @@
   .dir-toggle{position:sticky;bottom:0;display:flex;gap:8px;justify-content:center;padding:8px;background:var(--paper);border-top:1px solid var(--rule);}
   .dir-toggle button{background:var(--paper-raised);border:1px solid var(--rule);border-radius:20px;padding:6px 16px;font-size:13px;cursor:pointer;}
   .dir-toggle button.active{background:var(--red);color:#fff;border-color:var(--red);}
-  .hidden-input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none;}
-  .fill-toolbar{display:flex;flex-wrap:wrap;gap:8px;}
+  .hidden-input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none;font-size:16px;}
+  .fill-toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
   .fill-toolbar button{flex:1;min-width:100px;}
+  .fill-toolbar button.done-btn{flex:0 0 auto;min-width:0;font-size:12px;padding:7px 10px;color:var(--ink-soft);}
 </style>
 </head>
 <body>
@@ -260,15 +264,16 @@ function renderHome(){
     [...puzzles].sort((a,b)=>b.updatedAt-a.updatedAt).forEach(p=>{
       const runs = buildRuns(p.black, p.rows, p.cols);
       const filled = Object.values(p.answers||{}).filter(Boolean).length;
-      const pct = runs.totalOpen ? Math.round(100*filled/runs.totalOpen) : 0;
-      const card = el('div','card');
+      const card = el('div','card'+(p.done?' done':''));
       const img = document.createElement('img'); img.src = p.imageData;
       card.appendChild(img);
       const meta = el('div','meta');
       meta.appendChild(el('div','lbl', p.label));
       meta.appendChild(el('div','sub', `${p.rows}×${p.cols} · ${filled}/${runs.totalOpen} cells`));
       card.appendChild(meta);
-      card.appendChild(el('div','pct', pct===100?'✓':pct+'%'));
+      const statusTxt = p.done ? '✓ Completed' : (filled>0 ? 'Started' : '');
+      const statusCls = p.done ? 'done' : (filled>0 ? 'started' : '');
+      card.appendChild(el('div','pct'+(statusCls?' '+statusCls:''), statusTxt));
       card.addEventListener('click', ()=>{
         fillState = {puzzleId:p.id, selected:null, dir:'across'};
         view = {screen:'fill'};
@@ -527,6 +532,7 @@ function renderCalibrate(){
       if(dimsChanged && Object.values(existing.answers||{}).some(Boolean)){
         if(!confirm('Changing rows/columns shifts cell positions, so your existing answers for this puzzle will be cleared. Continue?')) return;
         existing.answers = {};
+        existing.done = false;
       }
       existing.label = label;
       existing.bbox = cal.bbox;
@@ -581,6 +587,35 @@ function renderCalibrate(){
 /* ---------- FILL ---------- */
 function getPuzzle(id){ return puzzles.find(p=>p.id===id); }
 
+function cellRect(p, r, c){
+  const bbox = p.bbox || {x:0,y:0,w:100,h:100};
+  const bcw = bbox.w/p.cols, bch = bbox.h/p.rows;
+  return { left:(bbox.x + c*bcw)+'%', top:(bbox.y + r*bch)+'%', width:bcw+'%', height:bch+'%' };
+}
+function positionHiddenInput(inputEl, p, sel){
+  if(!sel) return;
+  const r = cellRect(p, sel.r, sel.c);
+  inputEl.style.left = r.left; inputEl.style.top = r.top;
+  inputEl.style.width = r.width; inputEl.style.height = r.height;
+}
+function refreshCellDOM(p, k){
+  const cellEl = document.querySelector(`.fcell[data-k="${k}"]`);
+  if(!cellEl) return;
+  cellEl.innerHTML = '';
+  const letter = p.answers[k];
+  if(letter) cellEl.appendChild(el('span','letter', letter));
+}
+function setSelectedCellDOM(prevKey, newKey){
+  if(prevKey){
+    const prevEl = document.querySelector(`.fcell[data-k="${prevKey}"]`);
+    if(prevEl) prevEl.classList.remove('selected');
+  }
+  if(newKey){
+    const newEl = document.querySelector(`.fcell[data-k="${newKey}"]`);
+    if(newEl) newEl.classList.add('selected');
+  }
+}
+
 function renderFill(){
   const p = getPuzzle(fillState.puzzleId);
   const runs = buildRuns(p.black, p.rows, p.cols);
@@ -634,17 +669,15 @@ function renderFill(){
   const img = document.createElement('img'); img.src = p.imageData;
   wrap.appendChild(img);
 
-  const bbox = p.bbox || {x:0,y:0,w:100,h:100};
-  const bcw = bbox.w/p.cols, bch = bbox.h/p.rows;
-
   for(let r=0;r<p.rows;r++){
     for(let c=0;c<p.cols;c++){
       if(p.black[r][c]) continue;
       const k = `${r}-${c}`;
       const cell = el('div','fcell'+(sel && sel.r===r && sel.c===c ? ' selected':''));
-      cell.style.left=(bbox.x + c*bcw)+'%';
-      cell.style.top=(bbox.y + r*bch)+'%';
-      cell.style.width=bcw+'%'; cell.style.height=bch+'%';
+      cell.dataset.k = k;
+      const rc = cellRect(p, r, c);
+      cell.style.left=rc.left; cell.style.top=rc.top;
+      cell.style.width=rc.width; cell.style.height=rc.height;
       cell.style.fontSize = 'min(4vw, 20px)';
       const letter = p.answers[k];
       if(letter){
@@ -655,14 +688,15 @@ function renderFill(){
       wrap.appendChild(cell);
     }
   }
-  main.appendChild(wrap);
 
   const hidden = el('input','hidden-input');
   hidden.id='hiddenInput';
   hidden.setAttribute('autocomplete','off');
   hidden.addEventListener('input',(e)=> onType(p, runs, e));
   hidden.addEventListener('keydown',(e)=> onKeydown(p, runs, e));
-  main.appendChild(hidden);
+  positionHiddenInput(hidden, p, sel);
+  wrap.appendChild(hidden);
+  main.appendChild(wrap);
 
   const toolbar = el('div','fill-toolbar');
   if(editMode){
@@ -672,7 +706,7 @@ function renderFill(){
   }
   const clearBtn = el('button','secondary','Clear answers');
   clearBtn.addEventListener('click', ()=>{
-    if(confirm('Clear all answers?')){ p.answers={}; savePuzzles(puzzles); render(); }
+    if(confirm('Clear all answers?')){ p.answers={}; p.done=false; savePuzzles(puzzles); render(); }
   });
   toolbar.appendChild(clearBtn);
   const saveBtn = el('button','primary','Save');
@@ -683,6 +717,14 @@ function renderFill(){
     setTimeout(()=>{ saveBtn.textContent = 'Save'; }, 1200);
   });
   toolbar.appendChild(saveBtn);
+  const doneBtn = el('button','secondary done-btn'+(p.done?' c-leaf':''), p.done ? '✓ Completed' : 'Mark Completed');
+  doneBtn.addEventListener('click', ()=>{
+    p.done = !p.done;
+    p.updatedAt = Date.now();
+    savePuzzles(puzzles);
+    render();
+  });
+  toolbar.appendChild(doneBtn);
   main.appendChild(toolbar);
   frag.appendChild(main);
 
@@ -702,13 +744,16 @@ function onCellClick(p, runs, r, c){
   const m = runs.cellMembership[k];
   if(!m) return;
   const prev = fillState.selected;
+  const prevKey = prev ? `${prev.r}-${prev.c}` : null;
   if(prev && prev.r===r && prev.c===c && m.across && m.down){
     fillState.dir = fillState.dir==='across' ? 'down' : 'across';
   }else if(!m[fillState.dir]){
     fillState.dir = m.across ? 'across' : 'down';
   }
   fillState.selected = {r,c};
-  render();
+  setSelectedCellDOM(prevKey, k);
+  const hi = document.getElementById('hiddenInput');
+  if(hi){ positionHiddenInput(hi, p, fillState.selected); hi.focus({preventScroll:true}); }
 }
 function currentClue(runs){
   if(!fillState.selected) return null;
@@ -745,22 +790,36 @@ function onType(p, runs, e){
   if(!fillState.selected){
     const f = runs.order[0]; if(f) fillState.selected={r:f.row,c:f.col};
   }
-  const k = `${fillState.selected.r}-${fillState.selected.c}`;
-  p.answers[k] = ch;
+  const prevKey = `${fillState.selected.r}-${fillState.selected.c}`;
+  p.answers[prevKey] = ch;
   p.updatedAt = Date.now();
+  refreshCellDOM(p, prevKey);
+  moveNext(runs);
+  const newKey = `${fillState.selected.r}-${fillState.selected.c}`;
+  setSelectedCellDOM(prevKey, newKey);
+  const hi = document.getElementById('hiddenInput');
+  if(hi) positionHiddenInput(hi, p, fillState.selected);
   scheduleSave();
-  render();
 }
 function onKeydown(p, runs, e){
   if(e.key !== 'Backspace') return;
   e.preventDefault();
   if(!fillState.selected) return;
-  const k = `${fillState.selected.r}-${fillState.selected.c}`;
-  if(p.answers[k]){ delete p.answers[k]; }
-  else{ movePrev(runs); const k2=`${fillState.selected.r}-${fillState.selected.c}`; delete p.answers[k2]; }
+  const curKey = `${fillState.selected.r}-${fillState.selected.c}`;
+  if(p.answers[curKey]){
+    delete p.answers[curKey];
+    refreshCellDOM(p, curKey);
+  }else{
+    movePrev(runs);
+    const newKey = `${fillState.selected.r}-${fillState.selected.c}`;
+    delete p.answers[newKey];
+    refreshCellDOM(p, newKey);
+    setSelectedCellDOM(curKey, newKey);
+    const hi = document.getElementById('hiddenInput');
+    if(hi) positionHiddenInput(hi, p, fillState.selected);
+  }
   p.updatedAt = Date.now();
   scheduleSave();
-  render();
 }
 
 /* ---------- EXPORT A SHAREABLE, SELF-CONTAINED COPY ---------- */
