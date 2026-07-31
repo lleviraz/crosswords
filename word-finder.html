@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מוצא מילים לתשבצים</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23C1272D'/%3E%3Crect x='15' y='15' width='30' height='30' fill='%23F3EFE6'/%3E%3Crect x='55' y='15' width='30' height='30' fill='%23F3EFE6'/%3E%3Crect x='15' y='55' width='30' height='30' fill='%23F3EFE6'/%3E%3Crect x='55' y='55' width='30' height='30' fill='%23F3EFE6'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=Assistant:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F3EFE6;
+    --paper-dim:#E9E3D5;
+    --ink:#1C1B19;
+    --ink-soft:#4a463f;
+    --muted:#8B8477;
+    --red:#C1272D;
+    --red-dim:#a01f24;
+    --line:#2B2A28;
+    --found:#3f6b46;
+    --white:#fffdf8;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Assistant',sans-serif;
+    direction:rtl;
+    padding:20px 14px 60px;
+    line-height:1.4;
+  }
+  .wrap{max-width:760px;margin:0 auto;}
+
+  header{margin-bottom:22px;}
+  h1{
+    font-family:'Frank Ruhl Libre',serif;
+    font-weight:900;
+    font-size:2rem;
+    margin:0 0 4px;
+    letter-spacing:0.5px;
+  }
+  .tagline{color:var(--ink-soft);font-size:0.95rem;margin:0;}
+
+  .card{
+    background:var(--white);
+    border:1.5px solid var(--line);
+    border-radius:6px;
+    padding:18px 16px;
+    margin-bottom:16px;
+    box-shadow:3px 3px 0 rgba(43,42,40,0.08);
+  }
+
+  .tabs{display:flex;gap:8px;margin-bottom:16px;}
+  .tab-btn{
+    flex:1;
+    font-family:'Frank Ruhl Libre',serif;
+    font-weight:700;
+    font-size:1.05rem;
+    padding:11px 8px;
+    background:var(--paper-dim);
+    border:1.5px solid var(--line);
+    border-radius:6px;
+    cursor:pointer;
+    color:var(--ink);
+    transition:background .15s, color .15s;
+  }
+  .tab-btn.active{background:var(--red);color:var(--white);border-color:var(--red-dim);}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+
+  label{display:block;font-weight:600;font-size:0.9rem;margin-bottom:6px;color:var(--ink-soft);}
+  .hint{font-size:0.8rem;color:var(--muted);margin-top:4px;}
+
+  input[type=text], textarea{
+    font-family:'Assistant',sans-serif;
+    font-size:1rem;
+    border:1.5px solid var(--line);
+    border-radius:4px;
+    padding:9px 10px;
+    background:var(--paper);
+    color:var(--ink);
+    width:100%;
+    direction:rtl;
+  }
+  input[type=text]:focus, textarea:focus{outline:2px solid var(--red);outline-offset:1px;}
+
+  .row{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:14px;}
+  .row > div{flex:1;min-width:180px;}
+
+  button{
+    font-family:'Assistant',sans-serif;
+    font-weight:700;
+    font-size:0.95rem;
+    padding:10px 18px;
+    border-radius:5px;
+    border:1.5px solid var(--line);
+    background:var(--ink);
+    color:var(--white);
+    cursor:pointer;
+  }
+  button.primary{background:var(--red);border-color:var(--red-dim);}
+  button.ghost{background:var(--paper);color:var(--ink);}
+  button:hover{filter:brightness(1.08);}
+  button:active{filter:brightness(0.95);}
+  button:disabled{opacity:0.5;cursor:default;}
+
+  .word-row{margin-bottom:20px;padding-bottom:16px;border-bottom:1px dashed var(--muted);}
+  .word-row:last-child{border-bottom:none;}
+  .word-row-label{font-size:0.85rem;color:var(--muted);margin-bottom:8px;font-weight:600;}
+  .boxes{display:flex;flex-direction:row;gap:5px;margin-bottom:10px;}
+  .box{
+    width:2.5em;height:2.5em;
+    border:2px solid var(--line);
+    border-radius:3px;
+    background:var(--paper);
+    text-align:center;
+    font-size:1.3rem;
+    font-family:'Frank Ruhl Libre',serif;
+    font-weight:700;
+    padding:0;
+  }
+  .box:focus{outline:none;border-color:var(--red);background:var(--white);}
+
+  .results{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px;}
+  .result-chip{
+    background:var(--paper-dim);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:5px 10px;
+    font-size:0.95rem;
+    font-family:'Frank Ruhl Libre',serif;
+  }
+  .combo-row{
+    display:flex;
+    gap:8px;
+    align-items:center;
+    padding:6px 0;
+    border-bottom:1px solid var(--paper-dim);
+    font-family:'Frank Ruhl Libre',serif;
+    font-size:1.05rem;
+  }
+  .combo-row .plus{color:var(--muted);font-family:'Assistant',sans-serif;}
+  .no-results{color:var(--muted);font-size:0.9rem;padding:6px 0;}
+  .truncate-note{color:var(--muted);font-size:0.8rem;margin-top:6px;}
+  .error{color:var(--red);font-size:0.85rem;margin-top:6px;}
+
+  details{margin-bottom:16px;}
+  summary{
+    cursor:pointer;font-weight:700;font-family:'Frank Ruhl Libre',serif;
+    font-size:1.1rem;padding:4px 0;
+  }
+  .dict-stats{font-size:0.9rem;color:var(--ink-soft);margin:10px 0;}
+  .dict-stats b{color:var(--ink);}
+  .subsection{margin-top:14px;padding-top:14px;border-top:1px solid var(--paper-dim);}
+  .subsection h3{font-size:0.95rem;margin:0 0 8px;font-family:'Assistant',sans-serif;}
+  .chip-btns{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
+  .chip-btns button{padding:5px 11px;font-size:0.82rem;font-weight:600;}
+  .status-line{font-size:0.85rem;color:var(--ink-soft);margin-top:8px;min-height:1.2em;}
+  .search-results{margin-top:8px;}
+  .search-result-item{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:0.95rem;}
+  footer{text-align:center;color:var(--muted);font-size:0.8rem;margin-top:30px;}
+  footer a{color:var(--red);}
+
+  @media (max-width:420px){
+    .box{width:2.15em;height:2.15em;font-size:1.1rem;}
+    h1{font-size:1.6rem;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>מוצא מילים לתשבצים</h1>
+    <p class="tagline">מציאת מילים לפי אותיות ידועות או אנגרמה — עובד אופליין, המילון נשמר במכשיר שלך</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="partial">אותיות חלקיות</button>
+    <button class="tab-btn" data-tab="anagram">אנגרמה</button>
+  </div>
+
+  <!-- PARTIAL LETTERS TAB -->
+  <div class="tab-panel active" id="panel-partial">
+    <div class="card">
+      <div class="row">
+        <div>
+          <label for="partial-lengths">אורך המילים (למשל: 5 או 3+5)</label>
+          <input type="text" id="partial-lengths" placeholder="לדוגמה: 3+5" inputmode="text">
+          <p class="hint">כמה מילים נפרדות וכמה אותיות בכל אחת. הפרד עם +</p>
+        </div>
+        <button class="primary" id="partial-generate">בנה תיבות</button>
+      </div>
+      <div id="partial-words"></div>
+      <div class="error" id="partial-error"></div>
+    </div>
+  </div>
+
+  <!-- ANAGRAM TAB -->
+  <div class="tab-panel" id="panel-anagram">
+    <div class="card">
+      <div class="row">
+        <div>
+          <label for="anagram-letters">האותיות שיש לך</label>
+          <input type="text" id="anagram-letters" placeholder="לדוגמה: םולשםלוע">
+        </div>
+        <div>
+          <label for="anagram-lengths">חלוקה למילים (למשל: 3+5)</label>
+          <input type="text" id="anagram-lengths" placeholder="לדוגמה: 3+5">
+        </div>
+      </div>
+      <button class="primary" id="anagram-solve">מצא צירופים</button>
+      <p class="hint">כל האותיות שהזנת ינוצלו במדויק, מחולקות למילים באורך שציינת.</p>
+      <div class="error" id="anagram-error"></div>
+      <div id="anagram-results" class="search-results"></div>
+    </div>
+  </div>
+
+  <!-- DICTIONARY MANAGEMENT -->
+  <details class="card" id="dict-details">
+    <summary>ניהול מילון</summary>
+    <div class="dict-stats">במילון כרגע <b id="dict-count">0</b> מילים.</div>
+
+    <div class="subsection">
+      <h3>הוספת מילים ידנית</h3>
+      <textarea id="add-words-text" rows="3" placeholder="הזן מילים, אחת בכל שורה או מופרדות בפסיק/רווח"></textarea>
+      <button class="ghost" id="add-words-btn" style="margin-top:8px;">הוסף למילון</button>
+      <div class="status-line" id="add-words-status"></div>
+    </div>
+
+    <div class="subsection">
+      <h3>ייבוא מוויקימילון (דורש אינטרנט)</h3>
+      <div class="chip-btns">
+        <button class="ghost" data-cat="שמות עצם בעברית">שמות עצם</button>
+        <button class="ghost" data-cat="פעלים בעברית">פעלים</button>
+        <button class="ghost" data-cat="שמות תואר בעברית">שמות תואר</button>
+      </div>
+      <div class="row" style="margin-bottom:6px;">
+        <div>
+          <label for="wiki-category">שם קטגוריה בוויקימילון</label>
+          <input type="text" id="wiki-category" placeholder="לדוגמה: שמות עצם בעברית">
+        </div>
+        <button class="ghost" id="wiki-import-btn">ייבא קטגוריה</button>
+      </div>
+      <div class="status-line" id="wiki-status"></div>
+
+      <div class="row" style="margin-top:10px;">
+        <div>
+          <label for="wiki-search">חיפוש מילה בודדת להוספה</label>
+          <input type="text" id="wiki-search" placeholder="הקלד מילה או חלק ממילה">
+        </div>
+        <button class="ghost" id="wiki-search-btn">חפש</button>
+      </div>
+      <div id="wiki-search-results" class="search-results"></div>
+    </div>
+
+    <div class="subsection">
+      <h3>גיבוי ושחזור</h3>
+      <div class="chip-btns">
+        <button class="ghost" id="export-btn">ייצוא מילון (JSON)</button>
+        <button class="ghost" id="import-btn">ייבוא מילון (JSON)</button>
+        <button class="ghost" id="reset-btn">איפוס לרשימת ברירת המחדל</button>
+      </div>
+      <input type="file" id="import-file" accept="application/json" style="display:none;">
+      <div class="status-line" id="backup-status"></div>
+    </div>
+  </details>
+
+  <footer>
+    כלי אישי לפתרון תשבצים · <a href="https://lleviraz.github.io/crosswords/" target="_blank">crossword-fill</a><br>
+    רשימת המילים נשמרת רק בדפדפן שלך (localStorage), לא באתר עצמו.
+    מילים המיובאות מוויקימילון (he.wiktionary.org) מסופקות תחת רישיון
+    <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank">CC BY-SA</a>.
+  </footer>
+</div>
+
+<script>
+/* ---------------- Seed dictionary ---------------- */
+/* Full seed list lives in dictionary.json (loaded at startup, same folder
+   as this file). This tiny fallback is only used if that file can't be
+   fetched (e.g. opened as a local file:// without a server, or offline on
+   the very first visit before dictionary.json has ever loaded). */
+const FALLBACK_SEED_WORDS = [
+"אב","אם","יד","עץ","בית","ילד","ילדה","שלום","אהבה","עולם","ספר","שמש","ירח","מים","לחם","יום",
+"לילה","גדול","קטן","טוב","יפה","חכם","כלב","חתול","אדום","כחול","ירוק","אחד","שתיים","שלוש"
+];
+
+const FINAL_MAP = {"כ":"ך","מ":"ם","נ":"ן","פ":"ף","צ":"ץ"};
+const FINAL_TO_REGULAR = {"ך":"כ","ם":"מ","ן":"נ","ף":"פ","ץ":"צ"};
+const HEBREW_RE = /[\u05D0-\u05EA]/g;
+const PURE_WORD_RE = /^[\u05D0-\u05EA]+$/;
+
+function normalizeWord(raw){
+  const matches = raw.match(HEBREW_RE);
+  return matches ? matches.join('') : '';
+}
+
+/* ---------------- Dictionary storage ---------------- */
+const DICT_KEY = 'hwf_dictionary_v1';
+let dictionary = new Set();
+
+async function fetchSeedWords(){
+  try{
+    const resp = await fetch('dictionary.json');
+    if(!resp.ok) throw new Error('not ok');
+    const data = await resp.json();
+    const words = Array.isArray(data) ? data : (data.words || []);
+    if(words.length > 0) return words;
+    throw new Error('empty');
+  }catch(e){
+    return FALLBACK_SEED_WORDS;
+  }
+}
+
+async function loadDictionary(){
+  const stored = localStorage.getItem(DICT_KEY);
+  if(stored){
+    try{
+      const arr = JSON.parse(stored);
+      dictionary = new Set(arr);
+    }catch(e){
+      dictionary = new Set(await fetchSeedWords());
+    }
+  }else{
+    dictionary = new Set(await fetchSeedWords());
+    saveDictionary();
+  }
+  updateDictCount();
+}
+function saveDictionary(){
+  localStorage.setItem(DICT_KEY, JSON.stringify(Array.from(dictionary)));
+  updateDictCount();
+}
+function updateDictCount(){
+  document.getElementById('dict-count').textContent = dictionary.size;
+}
+function addWordsToDictionary(words){
+  let added = 0;
+  words.forEach(w=>{
+    const n = normalizeWord(w);
+    if(n.length>=2 && !dictionary.has(n)){
+      dictionary.add(n);
+      added++;
+    }
+  });
+  saveDictionary();
+  return added;
+}
+
+/* ---------------- Tabs ---------------- */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-'+btn.dataset.tab).classList.add('active');
+  });
+});
+
+/* ---------------- Length pattern parsing ---------------- */
+function parseLengths(str){
+  const parts = str.split('+').map(s=>s.trim()).filter(Boolean);
+  if(parts.length===0) return null;
+  const lengths = [];
+  for(const p of parts){
+    const n = parseInt(p,10);
+    if(!Number.isInteger(n) || n<1 || String(n)!==p) return null;
+    lengths.push(n);
+  }
+  return lengths;
+}
+
+/* ---------------- Partial letters mode ---------------- */
+const partialWordsContainer = document.getElementById('partial-words');
+const partialError = document.getElementById('partial-error');
+
+document.getElementById('partial-generate').addEventListener('click', ()=>{
+  partialError.textContent = '';
+  partialWordsContainer.innerHTML = '';
+  const lengths = parseLengths(document.getElementById('partial-lengths').value);
+  if(!lengths){
+    partialError.textContent = 'נא להזין אורך תקין, למשל 5 או 3+5';
+    return;
+  }
+  lengths.forEach((len, idx)=>{
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.dataset.length = len;
+
+    const lbl = document.createElement('div');
+    lbl.className = 'word-row-label';
+    lbl.textContent = 'מילה ' + (idx+1) + ' (' + len + ' אותיות)';
+    row.appendChild(lbl);
+
+    const boxes = document.createElement('div');
+    boxes.className = 'boxes';
+    for(let i=0;i<len;i++){
+      const box = document.createElement('input');
+      box.type = 'text';
+      box.className = 'box';
+      box.maxLength = 1;
+      box.dataset.index = i;
+      box.addEventListener('input', (e)=>{
+        let v = e.target.value;
+        const m = v.match(HEBREW_RE);
+        e.target.value = m ? m[m.length-1] : '';
+        if(e.target.value && box.nextElementSibling){
+          box.nextElementSibling.focus();
+        }
+      });
+      box.addEventListener('keydown', (e)=>{
+        if(e.key==='Backspace' && !box.value && box.previousElementSibling){
+          box.previousElementSibling.focus();
+        }
+      });
+      boxes.appendChild(box);
+    }
+    row.appendChild(boxes);
+
+    const solveBtn = document.createElement('button');
+    solveBtn.className = 'ghost';
+    solveBtn.textContent = 'חפש מילים';
+    row.appendChild(solveBtn);
+
+    const results = document.createElement('div');
+    results.className = 'results';
+    row.appendChild(results);
+
+    solveBtn.addEventListener('click', ()=>{
+      const boxEls = Array.from(boxes.querySelectorAll('.box'));
+      const pattern = boxEls.map(b=>b.value || '_');
+      const matches = findPartialMatches(pattern);
+      renderPartialResults(results, matches);
+    });
+
+    partialWordsContainer.appendChild(row);
+  });
+});
+
+function findPartialMatches(pattern){
+  const len = pattern.length;
+  const matches = [];
+  for(const word of dictionary){
+    if(word.length !== len) continue;
+    let ok = true;
+    for(let i=0;i<len;i++){
+      const p = pattern[i];
+      if(p === '_') continue;
+      const wc = word[i];
+      if(wc === p) continue;
+      // allow final-letter leniency at the last position
+      if(i === len-1 && (FINAL_MAP[p]===wc || FINAL_TO_REGULAR[p]===wc)){
+        continue;
+      }
+      ok = false;
+      break;
+    }
+    if(ok) matches.push(word);
+  }
+  matches.sort((a,b)=>a.localeCompare(b,'he'));
+  return matches;
+}
+
+function renderPartialResults(container, matches){
+  container.innerHTML = '';
+  if(matches.length===0){
+    const none = document.createElement('div');
+    none.className = 'no-results';
+    none.textContent = 'לא נמצאו מילים תואמות במילון';
+    container.appendChild(none);
+    return;
+  }
+  const LIMIT = 150;
+  matches.slice(0,LIMIT).forEach(w=>{
+    const chip = document.createElement('span');
+    chip.className = 'result-chip';
+    chip.textContent = w;
+    container.appendChild(chip);
+  });
+  if(matches.length>LIMIT){
+    const note = document.createElement('div');
+    note.className = 'truncate-note';
+    note.textContent = 'נמצאו ' + matches.length + ' תוצאות, מוצגות ' + LIMIT + ' הראשונות';
+    container.appendChild(note);
+  }
+}
+
+/* ---------------- Anagram mode ---------------- */
+function letterCounts(word){
+  const counts = {};
+  for(const ch of word){
+    const norm = FINAL_TO_REGULAR[ch] || ch;
+    counts[norm] = (counts[norm]||0) + 1;
+  }
+  return counts;
+}
+function subtractCounts(a,b){
+  const result = Object.assign({}, a);
+  for(const k in b){
+    result[k] = (result[k]||0) - b[k];
+    if(result[k] < 0) return null;
+    if(result[k] === 0) delete result[k];
+  }
+  return result;
+}
+function countsEmpty(c){
+  return Object.keys(c).length === 0;
+}
+
+document.getElementById('anagram-solve').addEventListener('click', ()=>{
+  const errorEl = document.getElementById('anagram-error');
+  const resultsEl = document.getElementById('anagram-results');
+  errorEl.textContent = '';
+  resultsEl.innerHTML = '';
+
+  const letters = normalizeWord(document.getElementById('anagram-letters').value);
+  const lengths = parseLengths(document.getElementById('anagram-lengths').value);
+
+  if(!letters){
+    errorEl.textContent = 'נא להזין אותיות בעברית';
+    return;
+  }
+  if(!lengths){
+    errorEl.textContent = 'נא להזין חלוקה תקינה, למשל 5 או 3+5';
+    return;
+  }
+  const totalNeeded = lengths.reduce((a,b)=>a+b,0);
+  if(totalNeeded !== letters.length){
+    errorEl.textContent = 'סכום אורכי המילים (' + totalNeeded + ') לא תואם למספר האותיות שהזנת (' + letters.length + ')';
+    return;
+  }
+
+  const bagCounts = letterCounts(letters);
+
+  // group dictionary words by length, precompute their letter counts
+  const wordsByLength = {};
+  for(const word of dictionary){
+    if(!wordsByLength[word.length]) wordsByLength[word.length] = [];
+    wordsByLength[word.length].push({word, counts: letterCounts(word)});
+  }
+
+  const LIMIT = 300;
+  const combos = [];
+
+  function search(idx, remaining, chosen){
+    if(combos.length >= LIMIT) return;
+    if(idx === lengths.length){
+      if(countsEmpty(remaining)){
+        combos.push(chosen.slice());
+      }
+      return;
+    }
+    const len = lengths[idx];
+    const candidates = wordsByLength[len] || [];
+    for(const cand of candidates){
+      const newRemaining = subtractCounts(remaining, cand.counts);
+      if(newRemaining !== null){
+        chosen.push(cand.word);
+        search(idx+1, newRemaining, chosen);
+        chosen.pop();
+        if(combos.length >= LIMIT) return;
+      }
+    }
+  }
+  search(0, bagCounts, []);
+
+  if(combos.length === 0){
+    const none = document.createElement('div');
+    none.className = 'no-results';
+    none.textContent = 'לא נמצאו צירופי מילים מתאימים במילון';
+    resultsEl.appendChild(none);
+    return;
+  }
+  combos.forEach(combo=>{
+    const row = document.createElement('div');
+    row.className = 'combo-row';
+    combo.forEach((w, i)=>{
+      const span = document.createElement('span');
+      span.textContent = w;
+      row.appendChild(span);
+      if(i < combo.length-1){
+        const plus = document.createElement('span');
+        plus.className = 'plus';
+        plus.textContent = '+';
+        row.appendChild(plus);
+      }
+    });
+    resultsEl.appendChild(row);
+  });
+  if(combos.length >= LIMIT){
+    const note = document.createElement('div');
+    note.className = 'truncate-note';
+    note.textContent = 'הוצגו ' + LIMIT + ' התוצאות הראשונות בלבד';
+    resultsEl.appendChild(note);
+  }
+});
+
+/* ---------------- Dictionary management: manual add ---------------- */
+document.getElementById('add-words-btn').addEventListener('click', ()=>{
+  const raw = document.getElementById('add-words-text').value;
+  const words = raw.split(/[\n,،\s]+/).filter(Boolean);
+  const added = addWordsToDictionary(words);
+  document.getElementById('add-words-status').textContent = 'נוספו ' + added + ' מילים חדשות למילון';
+  document.getElementById('add-words-text').value = '';
+});
+
+/* ---------------- Wiktionary category import ---------------- */
+const WIKI_API = 'https://he.wiktionary.org/w/api.php';
+
+async function importCategory(category){
+  const statusEl = document.getElementById('wiki-status');
+  statusEl.textContent = 'מייבא מ"' + category + '"...';
+  let cmcontinue = null;
+  let fetchedTotal = 0;
+  let addedTotal = 0;
+  const MAX_FETCH = 2000;
+  try{
+    do{
+      const params = new URLSearchParams({
+        action: 'query',
+        list: 'categorymembers',
+        cmtitle: 'קטגוריה:' + category,
+        cmlimit: '500',
+        cmnamespace: '0',
+        format: 'json',
+        origin: '*'
+      });
+      if(cmcontinue) params.set('cmcontinue', cmcontinue);
+      const resp = await fetch(WIKI_API + '?' + params.toString());
+      if(!resp.ok) throw new Error('שגיאת רשת');
+      const data = await resp.json();
+      const members = (data.query && data.query.categorymembers) || [];
+      const titles = members
+        .map(m=>normalizeWord(m.title))
+        .filter(t=>PURE_WORD_RE.test(t) && t.length>=2);
+      fetchedTotal += members.length;
+      const added = addWordsToDictionary(titles);
+      addedTotal += added;
+      cmcontinue = data.continue && data.continue.cmcontinue;
+      statusEl.textContent = 'נבדקו ' + fetchedTotal + ' ערכים, נוספו ' + addedTotal + ' מילים חדשות...';
+    } while(cmcontinue && fetchedTotal < MAX_FETCH);
+
+    statusEl.textContent = 'הושלם: נבדקו ' + fetchedTotal + ' ערכים, נוספו ' + addedTotal + ' מילים חדשות למילון';
+    if(fetchedTotal === 0){
+      statusEl.textContent += ' — ייתכן ששם הקטגוריה שגוי. נסה שם אחר (עיין בוויקימילון).';
+    }
+  }catch(err){
+    statusEl.textContent = 'שגיאה בייבוא: ' + err.message + ' (בדוק חיבור לאינטרנט)';
+  }
+}
+
+document.getElementById('wiki-import-btn').addEventListener('click', ()=>{
+  const cat = document.getElementById('wiki-category').value.trim();
+  if(!cat){
+    document.getElementById('wiki-status').textContent = 'נא להזין שם קטגוריה';
+    return;
+  }
+  importCategory(cat);
+});
+document.querySelectorAll('.chip-btns [data-cat]').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.getElementById('wiki-category').value = btn.dataset.cat;
+    importCategory(btn.dataset.cat);
+  });
+});
+
+/* ---------------- Wiktionary word search ---------------- */
+document.getElementById('wiki-search-btn').addEventListener('click', async ()=>{
+  const term = document.getElementById('wiki-search').value.trim();
+  const resultsEl = document.getElementById('wiki-search-results');
+  resultsEl.innerHTML = '';
+  if(!term) return;
+  resultsEl.innerHTML = '<div class="status-line">מחפש...</div>';
+  try{
+    const params = new URLSearchParams({
+      action: 'query',
+      list: 'search',
+      srsearch: term,
+      srlimit: '15',
+      format: 'json',
+      origin: '*'
+    });
+    const resp = await fetch(WIKI_API + '?' + params.toString());
+    const data = await resp.json();
+    const hits = (data.query && data.query.search) || [];
+    const words = hits.map(h=>normalizeWord(h.title)).filter(t=>PURE_WORD_RE.test(t) && t.length>=2);
+    const unique = Array.from(new Set(words));
+    resultsEl.innerHTML = '';
+    if(unique.length===0){
+      resultsEl.innerHTML = '<div class="no-results">לא נמצאו תוצאות</div>';
+      return;
+    }
+    unique.forEach(w=>{
+      const item = document.createElement('div');
+      item.className = 'search-result-item';
+      const already = dictionary.has(w);
+      item.innerHTML = '<span>'+w+'</span>';
+      const addBtn = document.createElement('button');
+      addBtn.className = 'ghost';
+      addBtn.style.padding = '3px 10px';
+      addBtn.style.fontSize = '0.8rem';
+      addBtn.textContent = already ? 'כבר במילון' : 'הוסף';
+      addBtn.disabled = already;
+      addBtn.addEventListener('click', ()=>{
+        addWordsToDictionary([w]);
+        addBtn.textContent = 'נוסף ✓';
+        addBtn.disabled = true;
+      });
+      item.appendChild(addBtn);
+      resultsEl.appendChild(item);
+    });
+  }catch(err){
+    resultsEl.innerHTML = '<div class="error">שגיאה בחיפוש: ' + err.message + '</div>';
+  }
+});
+
+/* ---------------- Backup / restore ---------------- */
+document.getElementById('export-btn').addEventListener('click', ()=>{
+  const data = {
+    exportedAt: new Date().toISOString(),
+    wordCount: dictionary.size,
+    words: Array.from(dictionary).sort((a,b)=>a.localeCompare(b,'he'))
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'hebrew-word-finder-dictionary.json';
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+document.getElementById('import-btn').addEventListener('click', ()=>{
+  document.getElementById('import-file').click();
+});
+document.getElementById('import-file').addEventListener('change', (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev)=>{
+    try{
+      const data = JSON.parse(ev.target.result);
+      const words = Array.isArray(data) ? data : (data.words || []);
+      const added = addWordsToDictionary(words);
+      document.getElementById('backup-status').textContent = 'יובאו ' + added + ' מילים חדשות מהקובץ';
+    }catch(err){
+      document.getElementById('backup-status').textContent = 'שגיאה בקריאת הקובץ: ' + err.message;
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+});
+
+document.getElementById('reset-btn').addEventListener('click', async ()=>{
+  if(confirm('לאפס את המילון לרשימת ברירת המחדל? כל המילים שהוספת יימחקו.')){
+    dictionary = new Set(await fetchSeedWords());
+    saveDictionary();
+    document.getElementById('backup-status').textContent = 'המילון אופס לרשימת ברירת המחדל';
+  }
+});
+
+/* ---------------- Init ---------------- */
+loadDictionary();
+</script>
+</body>
+</html>
