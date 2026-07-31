@@ -241,7 +241,12 @@
         <button class="ghost" data-cat="שמות עצם בעברית">שמות עצם</button>
         <button class="ghost" data-cat="פעלים בעברית">פעלים</button>
         <button class="ghost" data-cat="שמות תואר בעברית">שמות תואר</button>
+        <button class="ghost" data-cat="עברית מקראית">מקראי/ארכאי</button>
+        <button class="ghost" data-cat="סלנג בעברית">סלנג</button>
+        <button class="ghost" data-cat="מילים לועזיות בעברית">מילים לועזיות</button>
+        <button class="ghost" data-cat="שמות פרטיים בעברית">שמות פרטיים</button>
       </div>
+      <p class="hint">שמות הקטגוריות הם ניחוש סביר — אם קטגוריה מסוימת מחזירה 0 תוצאות, חפשו את השם המדויק בוויקימילון והזינו אותו בשדה למטה. שימו לב: נטיות פועל וצורות ריבוי/סמיכות בדרך כלל אינן קיימות כערכים נפרדים בוויקימילון העברי, כך שהייבוא הזה לא יתפוס אותן.</p>
       <div class="row" style="margin-bottom:6px;">
         <div>
           <label for="wiki-category">שם קטגוריה בוויקימילון</label>
@@ -580,6 +585,65 @@ document.getElementById('anagram-solve').addEventListener('click', ()=>{
     wordsByLength[word.length].push({word, counts: letterCounts(word)});
   }
 
+  function isSubsetCounts(sub, full){
+    for(const k in sub){
+      if(!full[k] || full[k] < sub[k]) return false;
+    }
+    return true;
+  }
+
+  // Per-section suggestions: top words of each length whose letters are
+  // usable from the bag, shown independently of whether a full combo
+  // exists — useful for browsing options even when no perfect split is found.
+  const SUGGEST_COUNT = 5;
+  const sectionsWrap = document.createElement('div');
+  sectionsWrap.style.marginBottom = '14px';
+  const sectionsTitle = document.createElement('div');
+  sectionsTitle.className = 'word-row-label';
+  sectionsTitle.textContent = 'אפשרויות לפי חלק (לא בהכרח משלימות זו את זו):';
+  sectionsWrap.appendChild(sectionsTitle);
+  lengths.forEach((len, idx)=>{
+    const candidates = (wordsByLength[len] || [])
+      .filter(c=>isSubsetCounts(c.counts, bagCounts))
+      .map(c=>c.word)
+      .sort((a,b)=>a.localeCompare(b,'he'));
+    const line = document.createElement('div');
+    line.className = 'results';
+    line.style.marginBottom = '4px';
+    const label = document.createElement('span');
+    label.style.fontSize = '0.85rem';
+    label.style.color = 'var(--muted)';
+    label.style.marginLeft = '6px';
+    label.textContent = 'חלק ' + (idx+1) + ' (' + len + ' אותיות):';
+    line.appendChild(label);
+    if(candidates.length === 0){
+      const none = document.createElement('span');
+      none.className = 'no-results';
+      none.textContent = 'אין מילים מתאימות במילון';
+      line.appendChild(none);
+    }else{
+      candidates.slice(0, SUGGEST_COUNT).forEach(w=>{
+        const chip = document.createElement('span');
+        chip.className = 'result-chip';
+        chip.textContent = w;
+        line.appendChild(chip);
+      });
+      if(candidates.length > SUGGEST_COUNT){
+        const more = document.createElement('span');
+        more.className = 'truncate-note';
+        more.textContent = '+' + (candidates.length - SUGGEST_COUNT) + ' נוספות';
+        line.appendChild(more);
+      }
+    }
+    sectionsWrap.appendChild(line);
+  });
+  resultsEl.appendChild(sectionsWrap);
+
+  const combosTitle = document.createElement('div');
+  combosTitle.className = 'word-row-label';
+  combosTitle.textContent = 'צירופים מלאים (משתמשים בכל האותיות בדיוק):';
+  resultsEl.appendChild(combosTitle);
+
   const LIMIT = 300;
   const combos = [];
 
@@ -608,7 +672,7 @@ document.getElementById('anagram-solve').addEventListener('click', ()=>{
   if(combos.length === 0){
     const none = document.createElement('div');
     none.className = 'no-results';
-    none.textContent = 'לא נמצאו צירופי מילים מתאימים במילון';
+    none.textContent = 'לא נמצא צירוף מלא שמנצל את כל האותיות במדויק — נסה את האפשרויות לפי חלק למעלה, או הוסף מילים למילון';
     resultsEl.appendChild(none);
     return;
   }
