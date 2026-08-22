@@ -764,20 +764,51 @@ function moveNext(runs){
   const cl = currentClue(runs);
   if(!cl) return;
   const idx = cl.cells.indexOf(`${fillState.selected.r}-${fillState.selected.c}`);
-  if(idx>-1 && idx<cl.cells.length-1){
-    const [r,c] = cl.cells[idx+1].split('-').map(Number);
-    fillState.selected={r,c};
-  }else{
-    const pos = runs.order.findIndex(x=>x.number===cl.number && x.dir===cl.dir);
-    const nxt = runs.order[(pos+1)%runs.order.length];
-    if(nxt){ fillState.selected={r:nxt.row,c:nxt.col}; fillState.dir=nxt.dir; }
+  if(cl.dir === 'across'){
+    // Hebrew: across words run RTL, so "next" = move left = lower index in cells array
+    if(idx > 0){
+      const [r,c] = cl.cells[idx-1].split('-').map(Number);
+      fillState.selected = {r,c};
+    } else {
+      // reached the leftmost cell — advance to next clue
+      const pos = runs.order.findIndex(x=>x.number===cl.number && x.dir===cl.dir);
+      const nxt = runs.order[(pos+1)%runs.order.length];
+      if(nxt){
+        fillState.dir = nxt.dir;
+        if(nxt.dir === 'across'){
+          // land at the rightmost (first in RTL) cell of the next across clue
+          const [r,c] = nxt.cells[nxt.cells.length-1].split('-').map(Number);
+          fillState.selected = {r,c};
+        } else {
+          fillState.selected = {r:nxt.row, c:nxt.col};
+        }
+      }
+    }
+  } else {
+    // down clues: LTR — keep original logic
+    if(idx>-1 && idx<cl.cells.length-1){
+      const [r,c] = cl.cells[idx+1].split('-').map(Number);
+      fillState.selected = {r,c};
+    } else {
+      const pos = runs.order.findIndex(x=>x.number===cl.number && x.dir===cl.dir);
+      const nxt = runs.order[(pos+1)%runs.order.length];
+      if(nxt){ fillState.selected={r:nxt.row,c:nxt.col}; fillState.dir=nxt.dir; }
+    }
   }
 }
 function movePrev(runs){
   const cl = currentClue(runs);
   if(!cl) return;
   const idx = cl.cells.indexOf(`${fillState.selected.r}-${fillState.selected.c}`);
-  if(idx>0){ const [r,c]=cl.cells[idx-1].split('-').map(Number); fillState.selected={r,c}; }
+  if(cl.dir === 'across'){
+    // Hebrew RTL: "prev" = move right = higher index in cells array
+    if(idx < cl.cells.length-1){
+      const [r,c] = cl.cells[idx+1].split('-').map(Number);
+      fillState.selected = {r,c};
+    }
+  } else {
+    if(idx>0){ const [r,c]=cl.cells[idx-1].split('-').map(Number); fillState.selected={r,c}; }
+  }
 }
 function scheduleSave(){
   clearTimeout(saveTimer);

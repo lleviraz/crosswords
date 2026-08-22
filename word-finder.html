@@ -124,6 +124,18 @@
   .box:focus{outline:none;border-color:var(--red);background:var(--white);}
 
   .results{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px;}
+  .results-grouped{margin-top:8px;}
+  .letter-group{margin-bottom:10px;}
+  .letter-group-header{
+    font-family:'Frank Ruhl Libre',serif;
+    font-weight:900;
+    font-size:1.05rem;
+    color:var(--red);
+    margin-bottom:5px;
+    padding-bottom:2px;
+    border-bottom:1.5px solid var(--paper-dim);
+  }
+  .letter-group-chips{display:flex;flex-wrap:wrap;gap:6px;}
   .result-chip{
     background:var(--paper-dim);
     border:1px solid var(--line);
@@ -526,28 +538,55 @@ function findPartialMatches(pattern){
   return matches;
 }
 
-function renderPartialResults(container, matches){
+/* Groups a sorted word array by first letter and renders letter headers + chips */
+function renderGrouped(container, words, limit){
   container.innerHTML = '';
-  if(matches.length===0){
+  if(words.length === 0){
     const none = document.createElement('div');
     none.className = 'no-results';
     none.textContent = 'לא נמצאו מילים תואמות במילון';
     container.appendChild(none);
     return;
   }
-  const LIMIT = 150;
-  matches.slice(0,LIMIT).forEach(w=>{
-    const chip = document.createElement('span');
-    chip.className = 'result-chip';
-    chip.textContent = w;
-    container.appendChild(chip);
-  });
-  if(matches.length>LIMIT){
+  const shown = words.slice(0, limit);
+  // Group by first character
+  const groups = new Map();
+  for(const w of shown){
+    const letter = w[0];
+    if(!groups.has(letter)) groups.set(letter, []);
+    groups.get(letter).push(w);
+  }
+  const wrap = document.createElement('div');
+  wrap.className = 'results-grouped';
+  for(const [letter, groupWords] of groups){
+    const group = document.createElement('div');
+    group.className = 'letter-group';
+    const header = document.createElement('div');
+    header.className = 'letter-group-header';
+    header.textContent = letter;
+    group.appendChild(header);
+    const chips = document.createElement('div');
+    chips.className = 'letter-group-chips';
+    groupWords.forEach(w=>{
+      const chip = document.createElement('span');
+      chip.className = 'result-chip';
+      chip.textContent = w;
+      chips.appendChild(chip);
+    });
+    group.appendChild(chips);
+    wrap.appendChild(group);
+  }
+  container.appendChild(wrap);
+  if(words.length > limit){
     const note = document.createElement('div');
     note.className = 'truncate-note';
-    note.textContent = 'נמצאו ' + matches.length + ' תוצאות, מוצגות ' + LIMIT + ' הראשונות';
+    note.textContent = 'נמצאו ' + words.length + ' תוצאות, מוצגות ' + limit + ' הראשונות';
     container.appendChild(note);
   }
+}
+
+function renderPartialResults(container, matches){
+  renderGrouped(container, matches, 150);
 }
 
 /* ---------------- Anagram mode ---------------- */
@@ -615,10 +654,9 @@ document.getElementById('anagram-solve').addEventListener('click', ()=>{
     return true;
   }
 
-  // Per-section suggestions: top words of each length whose letters are
-  // usable from the bag, shown independently of whether a full combo
-  // exists — useful for browsing options even when no perfect split is found.
-  const SUGGEST_COUNT = 5;
+  // Per-section suggestions: words of each length whose letters are
+  // usable from the bag, grouped by first letter for easy scanning.
+  const SUGGEST_LIMIT = 60;
   const sectionsWrap = document.createElement('div');
   sectionsWrap.style.marginBottom = '14px';
   const sectionsTitle = document.createElement('div');
@@ -630,35 +668,16 @@ document.getElementById('anagram-solve').addEventListener('click', ()=>{
       .filter(c=>isSubsetCounts(c.counts, bagCounts))
       .map(c=>c.word)
       .sort((a,b)=>a.localeCompare(b,'he'));
-    const line = document.createElement('div');
-    line.className = 'results';
-    line.style.marginBottom = '4px';
-    const label = document.createElement('span');
+    const sectionWrap = document.createElement('div');
+    sectionWrap.style.marginBottom = '10px';
+    const label = document.createElement('div');
     label.style.fontSize = '0.85rem';
     label.style.color = 'var(--muted)';
-    label.style.marginLeft = '6px';
+    label.style.marginBottom = '4px';
     label.textContent = 'חלק ' + (idx+1) + ' (' + len + ' אותיות):';
-    line.appendChild(label);
-    if(candidates.length === 0){
-      const none = document.createElement('span');
-      none.className = 'no-results';
-      none.textContent = 'אין מילים מתאימות במילון';
-      line.appendChild(none);
-    }else{
-      candidates.slice(0, SUGGEST_COUNT).forEach(w=>{
-        const chip = document.createElement('span');
-        chip.className = 'result-chip';
-        chip.textContent = w;
-        line.appendChild(chip);
-      });
-      if(candidates.length > SUGGEST_COUNT){
-        const more = document.createElement('span');
-        more.className = 'truncate-note';
-        more.textContent = '+' + (candidates.length - SUGGEST_COUNT) + ' נוספות';
-        line.appendChild(more);
-      }
-    }
-    sectionsWrap.appendChild(line);
+    sectionWrap.appendChild(label);
+    renderGrouped(sectionWrap, candidates, SUGGEST_LIMIT);
+    sectionsWrap.appendChild(sectionWrap);
   });
   resultsEl.appendChild(sectionsWrap);
 
