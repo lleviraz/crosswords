@@ -309,34 +309,57 @@ function normalizeWord(raw){
 
 /* ---------------- Dictionary storage ---------------- */
 const DICT_KEY = 'hwf_dictionary_v1';
+const DICT_VERSION_KEY = 'hwf_dictionary_version';
+const CURRENT_VERSION = 2; // bump this when the repo dictionary changes
 let dictionary = new Set();
 
+function setStatus(msg){
+  const el = document.getElementById('dict-count');
+  if(el) el.textContent = msg;
+}
+
+async function fetchWordFile(filename){
+  const resp = await fetch(filename + '?v=' + Date.now(), {cache: 'no-store'});
+  if(!resp.ok) throw new Error(filename + ' not found (' + resp.status + ')');
+  const data = await resp.json();
+  const words = Array.isArray(data) ? data : (data.words || []);
+  if(words.length === 0) throw new Error('empty');
+  return words;
+}
+
 async function fetchSeedWords(){
-  try{
-    const resp = await fetch('dictionary.json?v=' + Date.now(), {cache: 'no-store'});
-    if(!resp.ok) throw new Error('not ok');
-    const data = await resp.json();
-    const words = Array.isArray(data) ? data : (data.words || []);
-    if(words.length > 0) return words;
-    throw new Error('empty');
-  }catch(e){
-    return FALLBACK_SEED_WORDS;
+  // Try the big dictionary first; fall back to the small curated one; then inline fallback.
+  for(const file of ['words-full.json', 'dictionary.json']){
+    try{
+      const words = await fetchWordFile(file);
+      console.log('Loaded', words.length, 'words from', file);
+      return words;
+    }catch(e){
+      console.warn('Could not load', file, '—', e.message);
+    }
   }
+  console.warn('Using built-in fallback word list');
+  return FALLBACK_SEED_WORDS;
 }
 
 async function loadDictionary(){
+  setStatus('טוען...');
+  const storedVersion = parseInt(localStorage.getItem(DICT_VERSION_KEY) || '0', 10);
   const stored = localStorage.getItem(DICT_KEY);
-  if(stored){
+  if(stored && storedVersion >= CURRENT_VERSION){
     try{
       const arr = JSON.parse(stored);
       dictionary = new Set(arr);
-    }catch(e){
-      dictionary = new Set(await fetchSeedWords());
-    }
-  }else{
-    dictionary = new Set(await fetchSeedWords());
-    saveDictionary();
+      updateDictCount();
+      return;
+    }catch(e){ /* corrupt, fall through */ }
   }
+  // Either first visit, corrupt data, or version bump — fetch fresh
+  setStatus('מוריד מילון...');
+  const words = await fetchSeedWords();
+  dictionary = new Set(words);
+  saveDictionary();
+  localStorage.setItem(DICT_VERSION_KEY, String(CURRENT_VERSION));
   updateDictCount();
 }
 function saveDictionary(){
@@ -866,6 +889,7 @@ document.getElementById('reset-btn').addEventListener('click', async ()=>{
 
 document.getElementById('hard-reload-btn').addEventListener('click', ()=>{
   localStorage.removeItem(DICT_KEY);
+  localStorage.removeItem(DICT_VERSION_KEY);
   const url = new URL(location.href);
   url.searchParams.set('_r', Date.now());
   location.href = url.toString();
